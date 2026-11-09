@@ -5,10 +5,9 @@ import { useEffect, useMemo, useRef, useState, type FormEvent } from "react";
 import {
   Activity, ArrowRight, ArrowUpRight, Bell, CalendarDays,
   Check, CheckCheck, ChevronDown, ChevronLeft, ChevronRight, Circle,
-  CircleCheck, Clock3, FileText, Flag, FolderKanban,
+  CircleCheck, FileText, Flag, FolderKanban,
   Inbox, LayoutDashboard, ListTodo, Menu, MoreHorizontal, Moon, Plus, Search,
-  Settings2, SlidersHorizontal, Sparkles, Sun, Target, TrendingUp,
-  X, Zap,
+  Settings2, SlidersHorizontal, Sparkles, Sun, X,
 } from "lucide-react";
 
 type WorkspaceView = "Overview" | "My tasks" | "Projects" | "Inbox" | "Calendar" | "Reports";
@@ -288,6 +287,8 @@ export function DashboardApp() {
               search={search}
               onTaskScope={setTaskScope}
               taskScope={taskScope}
+              statusFilter={statusFilter}
+              onStatusFilter={setStatusFilter}
             />
           )}
           {view === "My tasks" && (
@@ -309,7 +310,7 @@ export function DashboardApp() {
           {view === "Projects" && <ProjectsView onCreate={() => showToast("Project creation will be available in workspace settings")} onProject={(name) => { setSearch(name); setTaskScope("Everything"); setView("My tasks"); showToast(`${name} tasks opened`); }} />}
           {view === "Inbox" && <InboxView activity={activity} onMarkAllRead={markAllRead} onRead={(id) => setActivity((items) => items.map((item) => item.id === id ? { ...item, read: true } : item))} />}
           {view === "Calendar" && <CalendarView tasks={tasks} weekOffset={weekOffset} onPrevious={() => setWeekOffset((value) => value - 1)} onNext={() => setWeekOffset((value) => value + 1)} />}
-          {view === "Reports" && <ReportsView tasks={tasks} projects={seedProjects} />}
+          {view === "Reports" && <ReportsView tasks={tasks} projects={seedProjects} onExploreStatus={(status) => { setStatusFilter(status); setTaskScope("Everything"); setSearch(""); setView("My tasks"); }} />}
         </div>
       </main>
 
@@ -321,76 +322,209 @@ export function DashboardApp() {
 }
 
 function OverviewView({
-  tasks, filteredTasks, activity, openTasks, completedTasks, onViewChange, onCreate, onSelectTask, onToggleTask, onMarkAllRead, onOpenInbox, search, onTaskScope, taskScope,
+  tasks, filteredTasks, activity, openTasks, completedTasks, onViewChange, onCreate, onSelectTask, onToggleTask, onMarkAllRead, onOpenInbox, search, onTaskScope, taskScope, statusFilter, onStatusFilter,
 }: {
   tasks: Task[]; filteredTasks: Task[]; activity: ActivityItem[]; openTasks: number; completedTasks: number;
   onViewChange: (view: WorkspaceView) => void; onCreate: () => void; onSelectTask: (task: Task) => void; onToggleTask: (id: string) => void;
   onMarkAllRead: () => void; onOpenInbox: () => void; search: string; onTaskScope: (scope: string) => void; taskScope: string;
+  statusFilter: string; onStatusFilter: (status: string) => void;
 }) {
   const activeTasks = tasks.filter((task) => task.status !== "Done");
+  const projectCount = seedProjects.length;
   return (
     <>
       <div className="dashboard-page-heading dashboard-overview-heading">
-        <div><div className="dashboard-eyebrow"><span className="dashboard-live-dot" /> MONDAY, NOVEMBER 09, 2026 <span className="eyebrow-divider" /> WEEK 46</div><h1>Good morning, Olivia<span>.</span></h1><p>Here's the signal behind the work. You're in a good place to make progress.</p></div>
+        <div>
+          <div className="dashboard-eyebrow"><span className="dashboard-live-dot" /> MONDAY, NOVEMBER 09, 2026 <span className="eyebrow-divider" /> MERIDIAN STUDIO</div>
+          <h1>Good morning, Olivia<span>.</span></h1>
+          <p>Your workspace at a glance. See what is moving, what is complete, and where the team needs attention.</p>
+        </div>
         <button type="button" className="dashboard-primary-button" onClick={onCreate}><Plus size={16} /> New task</button>
       </div>
 
-      <div className="dashboard-metrics-grid">
-        <MetricCard label="Open tasks" value={String(openTasks).padStart(2, "0")} change="3 due this week" icon={ListTodo} tone="violet" trend="up" />
-        <MetricCard label="Completed this cycle" value={String(completedTasks + 24)} change="12% more than last cycle" icon={CheckCheck} tone="green" trend="up" />
-        <MetricCard label="Active projects" value="04" change="All teams moving" icon={FolderKanban} tone="blue" trend="steady" />
-        <MetricCard label="Focus time" value="21.5h" change="+2.4h this week" icon={Clock3} tone="rose" trend="up" />
+      <div className="dashboard-kpi-strip" aria-label="Workspace metrics">
+        <OverviewMetric label="Open issues" value={String(openTasks).padStart(2, "0")} note="Across all teams" tone="violet" />
+        <OverviewMetric label="Completed this cycle" value={String(completedTasks + 24)} note="12% more than last cycle" tone="green" />
+        <OverviewMetric label="Active projects" value={String(projectCount).padStart(2, "0")} note="Across 3 teams" tone="blue" />
+        <OverviewMetric label="Cycle completion" value="78%" note="8.4% ahead of last cycle" tone="rose" />
       </div>
 
-      <div className="dashboard-overview-grid">
+      <div className="dashboard-insight-grid">
+        <section className="dashboard-panel insight-chart-panel">
+          <InsightTrendChart
+            kicker="CYCLE INSIGHTS"
+            title="Work added and completed"
+            description="Weekly issue activity across your workspace."
+          />
+        </section>
+        <section className="dashboard-panel insight-status-panel">
+          <StatusDistribution
+            tasks={tasks}
+            selectedStatus={statusFilter}
+            onSelect={(status) => onStatusFilter(statusFilter === status ? "All status" : status)}
+            helper="Select a status to filter your focus list."
+          />
+        </section>
+      </div>
+
+      <div className="dashboard-overview-grid dashboard-overview-grid-linear">
         <section className="dashboard-panel dashboard-focus-panel">
-          <div className="dashboard-panel-heading"><div><span className="dashboard-panel-kicker">THE IMPORTANT THINGS</span><h2>Your focus</h2><p>A short list of what deserves your attention.</p></div><button type="button" className="dashboard-text-link" onClick={() => onViewChange("My tasks")}>View all <ArrowRight size={14} /></button></div>
-          <div className="dashboard-task-tabs" role="tablist" aria-label="Task filters">
-            {["Everything", "Assigned to me", "In review"].map((scope) => <button type="button" key={scope} role="tab" aria-selected={taskScope === scope} className={taskScope === scope ? "is-selected" : ""} onClick={() => onTaskScope(scope)}>{scope}</button>)}
+          <div className="dashboard-panel-heading">
+            <div><span className="dashboard-panel-kicker">YOUR WORK QUEUE</span><h2>Focus issues</h2><p>The work that is closest to needing your attention.</p></div>
+            <button type="button" className="dashboard-text-link" onClick={() => onViewChange("My tasks")}>Open issue list <ArrowRight size={14} /></button>
           </div>
+          <div className="dashboard-task-tabs" role="tablist" aria-label="Task filters">
+            {[
+              { label: "Everything", value: "Everything" },
+              { label: "Assigned to me", value: "Assigned to me" },
+              { label: "In review", value: "In review" },
+            ].map((scope) => <button type="button" key={scope.value} role="tab" aria-selected={taskScope === scope.value} className={taskScope === scope.value ? "is-selected" : ""} onClick={() => onTaskScope(scope.value)}>{scope.label}</button>)}
+            {statusFilter !== "All status" && <button type="button" className="task-filter-reset" onClick={() => onStatusFilter("All status")}>Clear {statusFilter} ×</button>}
+          </div>
+          <div className="dashboard-task-table-head dashboard-focus-table-head"><span>ISSUE</span><span>PRIORITY</span><span>STATUS</span><span>DUE</span><span>ASSIGNEE</span></div>
           <div className="dashboard-focus-list">
             {filteredTasks.slice(0, 5).map((task) => <TaskRow key={task.id} task={task} onSelect={() => onSelectTask(task)} onToggle={() => onToggleTask(task.id)} compact />)}
             {filteredTasks.length === 0 && <EmptyState title="Nothing in this view" copy={search ? "Try another search term." : "You're clear here. Take a breath."} />}
           </div>
-          <div className="dashboard-focus-footer"><span><span className="dashboard-status-dot" /> {activeTasks.length} pieces of work in motion</span><button type="button" onClick={onCreate}><Plus size={13} /> Add to focus</button></div>
+          <div className="dashboard-focus-footer"><span><span className="dashboard-status-dot" /> {activeTasks.length} open issues across the workspace</span><button type="button" onClick={onCreate}><Plus size={13} /> Create issue</button></div>
         </section>
 
-        <div className="dashboard-overview-aside">
-          <section className="dashboard-panel momentum-panel">
-            <div className="dashboard-panel-heading compact-heading"><div><span className="dashboard-panel-kicker">TEAM MOMENTUM</span><h2>Moving well.</h2></div><button type="button" className="dashboard-kebab" aria-label="Momentum options" onClick={() => onViewChange("Reports")}><MoreHorizontal size={17} /></button></div>
-            <div className="momentum-score-row"><strong>78<span>%</span></strong><span className="momentum-change"><TrendingUp size={13} /> 8.4%</span></div>
-            <p className="momentum-copy">of planned work is on track this cycle</p>
-            <MomentumChart />
-            <div className="momentum-legend"><span><i className="legend-lilac" /> Completed</span><span><i className="legend-track" /> Planned</span><strong>LAST 7 DAYS</strong></div>
-          </section>
-
-          <section className="dashboard-panel project-spotlight-panel">
-            <div className="dashboard-panel-heading compact-heading"><div><span className="dashboard-panel-kicker">IN THE SPOTLIGHT</span><h2>Product experience</h2></div><span className="project-state-pill"><i /> On track</span></div>
-            <div className="spotlight-progress-copy"><strong>72%</strong><span>18 of 25 tasks complete</span></div>
-            <div className="spotlight-progress-track"><i /></div>
-            <div className="spotlight-bottom"><div className="avatar-stack-small"><Avatar initials="OP" tone="sand" small /><Avatar initials="AM" tone="rose" small /><Avatar initials="SK" tone="blue" small /><span>+2</span></div><span>Due Nov 20 <ArrowUpRight size={12} /></span></div>
-          </section>
-        </div>
-      </div>
-
-      <div className="dashboard-bottom-grid">
-        <section className="dashboard-panel projects-overview-panel">
-          <div className="dashboard-panel-heading"><div><span className="dashboard-panel-kicker">A WIDER VIEW</span><h2>Projects in motion</h2><p>How the bigger picture is coming together.</p></div><button type="button" className="dashboard-text-link" onClick={() => onViewChange("Projects")}>All projects <ArrowRight size={14} /></button></div>
-          <div className="project-overview-list">{seedProjects.slice(0, 3).map((project) => <ProjectProgressRow key={project.name} project={project} />)}</div>
-        </section>
-        <section className="dashboard-panel activity-overview-panel">
-          <div className="dashboard-panel-heading"><div><span className="dashboard-panel-kicker">THE LATEST</span><h2>Team activity</h2><p>Small steps, adding up.</p></div><button type="button" className="dashboard-kebab" aria-label="Open inbox" onClick={onOpenInbox}><ArrowUpRight size={16} /></button></div>
-          <div className="dashboard-activity-list">{activity.slice(0, 3).map((item) => <ActivityRow key={item.id} item={item} />)}</div>
-          <div className="activity-panel-footer"><span>{activity.filter((item) => !item.read).length} unread updates</span><button type="button" onClick={onMarkAllRead}>Mark all read</button></div>
+        <section className="dashboard-panel projects-overview-panel dashboard-project-health-panel">
+          <div className="dashboard-panel-heading"><div><span className="dashboard-panel-kicker">PROJECT HEALTH</span><h2>Projects in motion</h2><p>Progress against current scope.</p></div><button type="button" className="dashboard-text-link" onClick={() => onViewChange("Projects")}>All projects <ArrowRight size={14} /></button></div>
+          <div className="project-overview-list">{seedProjects.map((project) => <ProjectProgressRow key={project.name} project={project} />)}</div>
+          <div className="project-health-foot"><span><i className="health-dot is-on-track" /> 3 on track</span><span><i className="health-dot is-review" /> 1 needs review</span></div>
         </section>
       </div>
+
+      <section className="dashboard-panel activity-overview-panel dashboard-recent-activity-panel">
+        <div className="dashboard-panel-heading"><div><span className="dashboard-panel-kicker">WORKSPACE FEED</span><h2>Recent activity</h2><p>Updates from across your teams.</p></div><button type="button" className="dashboard-text-link" onClick={onOpenInbox}>Open inbox <ArrowUpRight size={14} /></button></div>
+        <div className="dashboard-activity-list dashboard-activity-horizontal">{activity.slice(0, 3).map((item) => <ActivityRow key={item.id} item={item} />)}</div>
+        <div className="activity-panel-footer"><span>{activity.filter((item) => !item.read).length} unread updates</span><button type="button" onClick={onMarkAllRead}>Mark all read</button></div>
+      </section>
     </>
   );
 }
 
-function MetricCard({ label, value, change, icon: Icon, tone, trend }: { label: string; value: string; change: string; icon: typeof Activity; tone: string; trend: "up" | "steady" }) {
-  return <article className="dashboard-metric-card"><div className="metric-card-top"><span>{label}</span><span className={`metric-icon metric-${tone}`}><Icon size={16} /></span></div><div className="metric-card-value">{value}</div><div className="metric-card-foot"><span className={trend === "up" ? "metric-trend-up" : "metric-trend-steady"}>{trend === "up" ? <ArrowUpRight size={12} /> : <Circle size={8} />}{change}</span></div></article>;
+function OverviewMetric({ label, value, note, tone }: { label: string; value: string; note: string; tone: string }) {
+  return <article className={`overview-metric metric-tone-${tone}`}><span>{label}</span><strong>{value}</strong><small>{note}</small></article>;
 }
+
+const insightData = {
+  "6w": [
+    { label: "Oct 05", created: 16, completed: 11 },
+    { label: "Oct 12", created: 18, completed: 12 },
+    { label: "Oct 19", created: 14, completed: 13 },
+    { label: "Oct 26", created: 23, completed: 17 },
+    { label: "Nov 02", created: 21, completed: 18 },
+    { label: "Nov 09", created: 26, completed: 22 },
+  ],
+  "12w": [
+    { label: "Aug 24", created: 9, completed: 7 },
+    { label: "Aug 31", created: 12, completed: 9 },
+    { label: "Sep 07", created: 15, completed: 11 },
+    { label: "Sep 14", created: 13, completed: 10 },
+    { label: "Sep 21", created: 17, completed: 12 },
+    { label: "Sep 28", created: 18, completed: 14 },
+    { label: "Oct 05", created: 16, completed: 11 },
+    { label: "Oct 12", created: 18, completed: 12 },
+    { label: "Oct 19", created: 14, completed: 13 },
+    { label: "Oct 26", created: 23, completed: 17 },
+    { label: "Nov 02", created: 21, completed: 18 },
+    { label: "Nov 09", created: 26, completed: 22 },
+  ],
+};
+
+type InsightDatum = (typeof insightData)["6w"][number];
+
+function InsightTrendChart({ kicker, title, description }: { kicker: string; title: string; description: string }) {
+  const [range, setRange] = useState<"6w" | "12w">("6w");
+  const [hoveredIndex, setHoveredIndex] = useState<number | null>(null);
+  const [selectedIndex, setSelectedIndex] = useState<number | null>(null);
+  const data: InsightDatum[] = insightData[range];
+  const maxValue = Math.ceil(Math.max(...data.flatMap((item) => [item.created, item.completed])) / 10) * 10;
+  const plot = { left: 44, right: 700, top: 18, bottom: 205 };
+  const points = data.map((item, index) => ({
+    ...item,
+    x: plot.left + (index / Math.max(1, data.length - 1)) * (plot.right - plot.left),
+    completedY: plot.bottom - (item.completed / maxValue) * (plot.bottom - plot.top),
+    createdY: plot.bottom - (item.created / maxValue) * (plot.bottom - plot.top),
+  }));
+  const completedPath = points.map((point, index) => `${index === 0 ? "M" : "L"} ${point.x} ${point.completedY}`).join(" ");
+  const createdPath = points.map((point, index) => `${index === 0 ? "M" : "L"} ${point.x} ${point.createdY}`).join(" ");
+  const completedArea = `${completedPath} L ${plot.right} ${plot.bottom} L ${plot.left} ${plot.bottom} Z`;
+  const totals = data.reduce((result, item) => ({ created: result.created + item.created, completed: result.completed + item.completed }), { created: 0, completed: 0 });
+  const activeIndex = hoveredIndex ?? selectedIndex;
+  const active = activeIndex === null ? null : points[activeIndex];
+  const ticks = [0, 1, 2, 3, 4].map((step) => Math.round(maxValue - (maxValue / 4) * step));
+
+  return <>
+    <div className="dashboard-panel-heading insight-panel-heading">
+      <div><span className="dashboard-panel-kicker">{kicker}</span><h2>{title}</h2><p>{description}</p></div>
+      <div className="insight-range-switch" role="group" aria-label="Chart time range">
+        <button type="button" aria-pressed={range === "6w"} className={range === "6w" ? "is-active" : ""} onClick={() => { setRange("6w"); setHoveredIndex(null); setSelectedIndex(null); }}>6 weeks</button>
+        <button type="button" aria-pressed={range === "12w"} className={range === "12w" ? "is-active" : ""} onClick={() => { setRange("12w"); setHoveredIndex(null); setSelectedIndex(null); }}>12 weeks</button>
+      </div>
+    </div>
+    <div className="insight-chart-summary">
+      <div><strong>{totals.completed}</strong><span>Completed</span></div>
+      <div><strong>{totals.created}</strong><span>Created</span></div>
+      <div className="insight-active-readout" aria-live="polite">{active ? <><strong>{active.label}</strong><span>{active.completed} completed · {active.created} created</span></> : <span>Select a point to inspect a week</span>}</div>
+    </div>
+    <div className="insight-trend-chart">
+      <svg viewBox="0 0 720 244" preserveAspectRatio="none" role="group" aria-label={`${title}: completed and created issues by week`}>
+        <defs>
+          <linearGradient id="morrow-insight-area" x1="0" x2="0" y1="0" y2="1"><stop offset="0%" stopColor="var(--dash-purple)" stopOpacity=".24" /><stop offset="100%" stopColor="var(--dash-purple)" stopOpacity="0" /></linearGradient>
+        </defs>
+        {ticks.map((tick, index) => {
+          const y = plot.top + (index / 4) * (plot.bottom - plot.top);
+          return <g key={tick}><line x1={plot.left} x2={plot.right} y1={y} y2={y} className="insight-grid-line" /><text x="31" y={y + 4} className="insight-axis-tick" textAnchor="end">{tick}</text></g>;
+        })}
+        <path d={completedArea} fill="url(#morrow-insight-area)" />
+        <path d={createdPath} className="insight-created-line" />
+        <path d={completedPath} className="insight-completed-line" />
+        {points.map((point, index) => <g key={point.label} className={`insight-point ${activeIndex === index ? "is-active" : ""}`} role="button" tabIndex={0} aria-label={`${point.label}: ${point.completed} completed and ${point.created} created`} onMouseEnter={() => setHoveredIndex(index)} onMouseLeave={() => setHoveredIndex(null)} onFocus={() => setHoveredIndex(index)} onBlur={() => setHoveredIndex(null)} onClick={() => setSelectedIndex(index)} onKeyDown={(event) => { if (event.key === "Enter" || event.key === " ") { event.preventDefault(); setSelectedIndex(index); } }}>
+          <circle cx={point.x} cy={point.createdY} r="8" className="insight-point-hit" />
+          <circle cx={point.x} cy={point.createdY} r="3.4" className="insight-created-dot" />
+          <circle cx={point.x} cy={point.completedY} r="8" className="insight-point-hit" />
+          <circle cx={point.x} cy={point.completedY} r="4.3" className="insight-completed-dot" />
+          <title>{`${point.label}: ${point.completed} completed, ${point.created} created`}</title>
+        </g>)}
+        {points.map((point, index) => <text key={`${point.label}-axis`} x={point.x} y="233" className="insight-x-axis-label" textAnchor="middle">{range === "12w" && index % 2 !== 0 && index !== points.length - 1 ? "" : point.label}</text>)}
+      </svg>
+    </div>
+    <div className="insight-chart-footer"><div className="insight-chart-legend"><span><i className="legend-completed" /> Completed</span><span><i className="legend-created" /> Created</span></div><span>Illustrative workspace data</span></div>
+  </>;
+}
+
+const issueStatuses: { status: TaskStatus; label: string; className: string }[] = [
+  { status: "In progress", label: "In progress", className: "progress" },
+  { status: "In review", label: "In review", className: "review" },
+  { status: "Todo", label: "Todo", className: "todo" },
+  { status: "Done", label: "Done", className: "done" },
+];
+
+function StatusDistribution({ tasks, selectedStatus, onSelect, helper, onExplore }: {
+  tasks: Task[]; selectedStatus?: string; onSelect?: (status: TaskStatus) => void; helper?: string; onExplore?: (status: TaskStatus) => void;
+}) {
+  const total = tasks.length;
+  const counts = issueStatuses.map((item) => ({ ...item, count: tasks.filter((task) => task.status === item.status).length }));
+  return <>
+    <div className="dashboard-panel-heading"><div><span className="dashboard-panel-kicker">ISSUE BREAKDOWN</span><h2>Issues by status</h2><p>{total} issues in the current workspace view.</p></div><span className="status-total">{total}</span></div>
+    <div className="status-stacked-bar" role="group" aria-label="Issue distribution by status">
+      {counts.filter((item) => item.count > 0).map((item) => <button key={item.status} type="button" className={`status-segment status-${item.className} ${selectedStatus === item.status ? "is-selected" : ""}`} style={{ width: `${(item.count / Math.max(total, 1)) * 100}%` }} aria-label={`${item.label}: ${item.count} issues`} title={`${item.label}: ${item.count}`} onClick={() => { onSelect?.(item.status); onExplore?.(item.status); }} />)}
+    </div>
+    <div className="status-breakdown-list">
+      {counts.map((item) => <button type="button" key={item.status} className={`status-breakdown-row ${selectedStatus === item.status ? "is-selected" : ""}`} onClick={() => { onSelect?.(item.status); onExplore?.(item.status); }}>
+        <span className={`status-indicator status-indicator-${item.className}`} />
+        <span>{item.label}</span>
+        <strong>{item.count}</strong>
+        <small>{total ? Math.round((item.count / total) * 100) : 0}%</small>
+      </button>)}
+    </div>
+    <p className="status-distribution-helper">{helper || "Select a status to explore matching issues."}</p>
+  </>;
+}
+
 
 function TaskRow({ task, onSelect, onToggle, compact = false }: { task: Task; onSelect: () => void; onToggle: () => void; compact?: boolean }) {
   return (
@@ -411,10 +545,6 @@ function ProjectProgressRow({ project }: { project: (typeof seedProjects)[number
 
 function ActivityRow({ item }: { item: ActivityItem }) {
   return <div className={`dashboard-activity-item ${!item.read ? "is-unread" : ""}`}><Avatar initials={item.initials} tone={item.tone} small /><div><p><strong>{item.name}</strong> {item.action} <b>{item.target}</b></p><span>{item.time}</span></div>{!item.read && <i className="activity-unread-dot" />}</div>;
-}
-
-function MomentumChart() {
-  return <div className="momentum-chart-wrap"><svg viewBox="0 0 320 102" role="img" aria-label="Team momentum increased steadily over the last seven days" preserveAspectRatio="none"><defs><linearGradient id="momentum-fill" x1="0" x2="0" y1="0" y2="1"><stop offset="0%" stopColor="#b58aff" stopOpacity=".26" /><stop offset="100%" stopColor="#b58aff" stopOpacity="0" /></linearGradient></defs><path d="M0 80 C18 76 28 82 45 68 S78 61 91 64 S115 52 137 57 S165 44 183 49 S211 36 229 43 S257 27 276 33 S301 19 320 15 L320 102 L0 102Z" fill="url(#momentum-fill)" /><path d="M0 80 C18 76 28 82 45 68 S78 61 91 64 S115 52 137 57 S165 44 183 49 S211 36 229 43 S257 27 276 33 S301 19 320 15" fill="none" stroke="#bc98ff" strokeWidth="2.4" strokeLinecap="round" /><path d="M0 88 C25 82 35 87 58 78 S91 73 112 76 S153 67 176 70 S213 60 234 65 S272 54 291 57 S309 51 320 49" fill="none" stroke="rgba(185,174,207,.34)" strokeWidth="1.5" strokeDasharray="4 5" /></svg><div className="momentum-chart-days"><span>MON</span><span>TUE</span><span>WED</span><span>THU</span><span>FRI</span><span>SAT</span><span>SUN</span></div></div>;
 }
 
 function TaskView({ title, eyebrow, subtitle, tasks, statusFilter, priorityFilter, onStatusFilter, onPriorityFilter, onSelectTask, onToggleTask, onCreate, search }: {
@@ -462,12 +592,28 @@ function CalendarView({ tasks, weekOffset, onPrevious, onNext }: { tasks: Task[]
   </>;
 }
 
-function ReportsView({ tasks, projects }: { tasks: Task[]; projects: typeof seedProjects }) {
+function ReportsView({ tasks, projects, onExploreStatus }: { tasks: Task[]; projects: typeof seedProjects; onExploreStatus: (status: TaskStatus) => void }) {
   const done = tasks.filter((task) => task.status === "Done").length;
+  const open = tasks.length - done;
   return <>
-    <div className="dashboard-page-heading"><div><div className="dashboard-eyebrow">CONTEXT, NOT MORE NOISE / 06</div><h1>Reports<span>.</span></h1><p>Understand the pace of the work, spot patterns, and decide what needs attention.</p></div><button type="button" className="dashboard-secondary-button" onClick={() => window.print()}><FileText size={15} /> Export snapshot</button></div>
-    <div className="report-metrics-grid"><MetricCard label="Cycle completion" value="78%" change="8.4% from last cycle" icon={Target} tone="violet" trend="up" /><MetricCard label="Tasks completed" value={String(24 + done)} change="Across 4 active projects" icon={CheckCheck} tone="green" trend="up" /><MetricCard label="Average cycle time" value="2.8d" change="0.4 days faster" icon={Zap} tone="amber" trend="up" /></div>
-    <div className="reports-layout"><section className="dashboard-panel report-chart-panel"><div className="dashboard-panel-heading"><div><span className="dashboard-panel-kicker">CYCLE VELOCITY</span><h2>Work is finding its rhythm.</h2><p>Completed work across the last six weeks.</p></div><span className="report-period">LAST 6 WEEKS <ChevronDown size={13} /></span></div><div className="report-chart"><div className="report-axis"><span>40</span><span>30</span><span>20</span><span>10</span><span>0</span></div><svg viewBox="0 0 600 220" preserveAspectRatio="none" role="img" aria-label="Completed work trend chart"><defs><linearGradient id="report-area" x1="0" x2="0" y1="0" y2="1"><stop offset="0%" stopColor="#b58aff" stopOpacity=".25" /><stop offset="100%" stopColor="#b58aff" stopOpacity="0" /></linearGradient></defs><path d="M0 173 C40 160 55 165 100 145 S160 155 200 128 S265 133 300 110 S358 118 400 84 S470 95 500 62 S560 55 600 34 L600 220 L0 220Z" fill="url(#report-area)" /><path d="M0 173 C40 160 55 165 100 145 S160 155 200 128 S265 133 300 110 S358 118 400 84 S470 95 500 62 S560 55 600 34" stroke="#b58aff" strokeWidth="3" fill="none" strokeLinecap="round" /></svg></div><div className="report-axis-labels"><span>OCT 05</span><span>OCT 12</span><span>OCT 19</span><span>OCT 26</span><span>NOV 02</span><span>NOV 09</span></div></section><section className="dashboard-panel report-breakdown-panel"><div className="dashboard-panel-heading"><div><span className="dashboard-panel-kicker">PROJECT HEALTH</span><h2>Across the team</h2></div></div>{projects.map((project) => <div className="report-project-row" key={project.name}><div><span>{project.name}</span><strong>{project.progress}%</strong></div><div className="report-project-track"><i style={{ width: `${project.progress}%` }} /></div></div>)}</section></div>
+    <div className="dashboard-page-heading"><div><div className="dashboard-eyebrow">WORKSPACE ANALYTICS / 06</div><h1>Reports<span>.</span></h1><p>Understand delivery trends, workload distribution, and project health.</p></div><button type="button" className="dashboard-secondary-button" onClick={() => window.print()}><FileText size={15} /> Export snapshot</button></div>
+    <div className="dashboard-kpi-strip report-kpi-strip">
+      <OverviewMetric label="Cycle completion" value="78%" note="8.4% above last cycle" tone="violet" />
+      <OverviewMetric label="Tasks completed" value={String(24 + done)} note="Across 4 active projects" tone="green" />
+      <OverviewMetric label="Open issues" value={String(open).padStart(2, "0")} note="Across all statuses" tone="blue" />
+      <OverviewMetric label="Average cycle time" value="2.8d" note="0.4 days faster" tone="rose" />
+    </div>
+    <div className="reports-insight-grid">
+      <section className="dashboard-panel insight-chart-panel report-insight-chart-panel"><InsightTrendChart kicker="DELIVERY TRENDS" title="Created vs. completed" description="Compare incoming work with issues completed by the team." /></section>
+      <section className="dashboard-panel insight-status-panel report-status-panel"><StatusDistribution tasks={tasks} onExplore={onExploreStatus} helper="Choose a status to open the matching issue list." /></section>
+    </div>
+    <section className="dashboard-panel report-project-health">
+      <div className="dashboard-panel-heading"><div><span className="dashboard-panel-kicker">PROJECT PERFORMANCE</span><h2>Progress by project</h2><p>Completion against the current project scope.</p></div><span className="report-table-note">{projects.length} active projects</span></div>
+      <div className="report-project-table" role="table" aria-label="Project progress report">
+        <div className="report-project-table-head" role="row"><span role="columnheader">Project</span><span role="columnheader">Completed</span><span role="columnheader">Progress</span><span role="columnheader">Status</span><span role="columnheader">Due date</span></div>
+        {projects.map((project) => <div className="report-project-table-row" role="row" key={project.name}><span role="cell"><i className={`project-code project-${project.color}`}>{project.code}</i><strong>{project.name}</strong></span><span role="cell">{project.done} / {project.total}</span><span role="cell"><span className="report-table-progress"><i style={{ width: `${project.progress}%` }} /></span><strong>{project.progress}%</strong></span><span role="cell"><i className={`report-health-dot ${project.status === "Needs review" ? "is-review" : "is-on-track"}`} />{project.status}</span><span role="cell">{project.due}</span></div>)}
+      </div>
+    </section>
   </>;
 }
 

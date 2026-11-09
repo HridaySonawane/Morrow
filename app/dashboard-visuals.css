@@ -1,0 +1,685 @@
+/* --------------------------------------------------------------------------
+   Morrow workspace analytics — Linear-inspired, not a replica.
+   Data visualizations are the primary surface; panels stay quiet and legible.
+   -------------------------------------------------------------------------- */
+
+.morrow-professional .dashboard-kpi-strip {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  margin: 0 0 20px;
+  border-top: 1px solid var(--dash-line);
+  border-bottom: 1px solid var(--dash-line);
+}
+
+.morrow-professional .overview-metric {
+  position: relative;
+  display: flex;
+  min-width: 0;
+  flex-direction: column;
+  gap: 6px;
+  padding: 15px 22px 15px 0;
+}
+
+.morrow-professional .overview-metric + .overview-metric {
+  padding-left: 22px;
+  border-left: 1px solid var(--dash-line);
+}
+
+.morrow-professional .overview-metric > span {
+  color: var(--muted);
+  font-size: 11px;
+  font-weight: 550;
+}
+
+.morrow-professional .overview-metric > strong {
+  color: var(--text);
+  font-family: var(--font-display);
+  font-size: 27px;
+  font-weight: 600;
+  letter-spacing: -.055em;
+  line-height: 1.05;
+  font-variant-numeric: tabular-nums;
+}
+
+.morrow-professional .overview-metric > small {
+  color: var(--muted-2);
+  font-size: 10px;
+  line-height: 1.4;
+}
+
+.morrow-professional .metric-tone-green > small { color: var(--green); }
+.morrow-professional .metric-tone-violet > strong { color: var(--dash-purple); }
+
+.morrow-professional .dashboard-insight-grid,
+.morrow-professional .reports-insight-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1.75fr) minmax(290px, .86fr);
+  gap: 14px;
+  align-items: stretch;
+  margin-bottom: 15px;
+}
+
+.morrow-professional .insight-chart-panel,
+.morrow-professional .insight-status-panel {
+  min-width: 0;
+  padding: 19px 20px 15px;
+}
+
+.morrow-professional .insight-panel-heading {
+  align-items: flex-start;
+}
+
+.morrow-professional .insight-panel-heading h2 {
+  font-size: 19px;
+  letter-spacing: -.035em;
+}
+
+.morrow-professional .insight-panel-heading p {
+  font-size: 12px;
+}
+
+.morrow-professional .insight-range-switch {
+  display: inline-flex;
+  flex: 0 0 auto;
+  gap: 2px;
+  padding: 3px;
+  border: 1px solid var(--dash-line);
+  border-radius: 6px;
+  background: var(--dash-panel-soft);
+}
+
+.morrow-professional .insight-range-switch button {
+  min-height: 28px;
+  padding: 0 9px;
+  border-radius: 4px;
+  color: var(--muted);
+  font-size: 10px;
+  cursor: pointer;
+  transition: background .15s ease, color .15s ease;
+}
+
+.morrow-professional .insight-range-switch button:hover {
+  color: var(--text);
+}
+
+.morrow-professional .insight-range-switch button.is-active {
+  background: var(--surface-raised);
+  color: var(--text);
+  box-shadow: 0 1px 2px rgba(0,0,0,.16);
+}
+
+.morrow-professional .insight-chart-summary {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  min-height: 51px;
+  margin-top: 9px;
+}
+
+.morrow-professional .insight-chart-summary > div:not(.insight-active-readout) {
+  display: flex;
+  align-items: baseline;
+  gap: 7px;
+}
+
+.morrow-professional .insight-chart-summary > div > strong {
+  color: var(--text);
+  font-family: var(--font-display);
+  font-size: 22px;
+  font-weight: 600;
+  letter-spacing: -.045em;
+  font-variant-numeric: tabular-nums;
+}
+
+.morrow-professional .insight-chart-summary > div > span {
+  color: var(--muted);
+  font-size: 10px;
+}
+
+.morrow-professional .insight-active-readout {
+  display: flex;
+  min-width: 0;
+  flex-direction: column;
+  gap: 2px;
+  margin-left: auto;
+  text-align: right;
+}
+
+.morrow-professional .insight-active-readout strong {
+  color: var(--text-soft);
+  font-size: 11px;
+  font-weight: 600;
+}
+
+.morrow-professional .insight-active-readout span {
+  color: var(--muted-2);
+  font-size: 10px;
+}
+
+.morrow-professional .insight-trend-chart {
+  width: 100%;
+  height: clamp(190px, 20vw, 244px);
+  min-height: 190px;
+}
+
+.morrow-professional .insight-trend-chart svg {
+  display: block;
+  width: 100%;
+  height: 100%;
+  overflow: visible;
+}
+
+.morrow-professional .insight-grid-line {
+  stroke: var(--dash-line);
+  stroke-width: 1;
+  stroke-dasharray: 2 5;
+}
+
+.morrow-professional .insight-axis-tick,
+.morrow-professional .insight-x-axis-label {
+  fill: var(--muted-2);
+  font-family: var(--font-mono);
+  font-size: 10px;
+}
+
+.morrow-professional .insight-x-axis-label {
+  font-family: var(--font-body);
+  font-size: 10px;
+}
+
+.morrow-professional .insight-created-line,
+.morrow-professional .insight-completed-line {
+  fill: none;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  stroke-width: 2.4;
+  vector-effect: non-scaling-stroke;
+}
+
+.morrow-professional .insight-created-line {
+  stroke: var(--chart-created, #d99fc4);
+  stroke-width: 2;
+  stroke-dasharray: 5 5;
+}
+
+.morrow-professional .insight-completed-line {
+  stroke: var(--dash-purple);
+}
+
+.morrow-professional .insight-point {
+  cursor: pointer;
+  outline: none;
+}
+
+.morrow-professional .insight-point-hit {
+  fill: transparent;
+}
+
+.morrow-professional .insight-created-dot {
+  fill: var(--chart-created, #d99fc4);
+  stroke: var(--dash-panel);
+  stroke-width: 1.5;
+}
+
+.morrow-professional .insight-completed-dot {
+  fill: var(--dash-purple);
+  stroke: var(--dash-panel);
+  stroke-width: 1.5;
+}
+
+.morrow-professional .insight-point.is-active .insight-created-dot,
+.morrow-professional .insight-point.is-active .insight-completed-dot,
+.morrow-professional .insight-point:focus-visible .insight-completed-dot {
+  stroke: var(--text);
+  stroke-width: 2.5;
+}
+
+.morrow-professional .insight-point:focus-visible .insight-point-hit {
+  fill: var(--accent-dim);
+  stroke: var(--dash-purple);
+  stroke-width: 1;
+}
+
+.morrow-professional .insight-chart-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding-top: 8px;
+  border-top: 1px solid var(--dash-line);
+  color: var(--muted-2);
+  font-size: 10px;
+}
+
+.morrow-professional .insight-chart-legend {
+  display: flex;
+  align-items: center;
+  gap: 17px;
+}
+
+.morrow-professional .insight-chart-legend span {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  color: var(--muted);
+}
+
+.morrow-professional .insight-chart-legend i {
+  display: inline-block;
+  width: 17px;
+  height: 2px;
+  border-radius: 2px;
+}
+
+.morrow-professional .legend-completed { background: var(--dash-purple); }
+.morrow-professional .legend-created { background: var(--chart-created, #d99fc4); }
+
+.morrow-professional .insight-status-panel {
+  display: flex;
+  flex-direction: column;
+}
+
+.morrow-professional .status-total {
+  display: grid;
+  width: 33px;
+  height: 33px;
+  place-items: center;
+  border: 1px solid var(--dash-line);
+  border-radius: 6px;
+  color: var(--text-soft);
+  font-size: 13px;
+  font-weight: 620;
+  font-variant-numeric: tabular-nums;
+}
+
+.morrow-professional .status-stacked-bar {
+  display: flex;
+  width: 100%;
+  height: 13px;
+  gap: 3px;
+  margin: 28px 0 19px;
+  overflow: hidden;
+  border-radius: 3px;
+  background: var(--dash-panel-raised);
+}
+
+.morrow-professional .status-segment {
+  display: block;
+  min-width: 0;
+  height: 100%;
+  padding: 0;
+  opacity: .84;
+  cursor: pointer;
+  transition: opacity .15s ease, filter .15s ease;
+}
+
+.morrow-professional .status-segment:hover,
+.morrow-professional .status-segment.is-selected {
+  opacity: 1;
+  filter: brightness(1.18);
+}
+
+.morrow-professional .status-segment-progress { background: #b58aff; }
+.morrow-professional .status-segment-review { background: #dfa8c9; }
+.morrow-professional .status-segment-todo { background: #81849a; }
+.morrow-professional .status-segment-done { background: #83c9a4; }
+
+.morrow-professional .status-breakdown-list {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.morrow-professional .status-breakdown-row {
+  display: grid;
+  grid-template-columns: 9px minmax(0, 1fr) 28px 35px;
+  align-items: center;
+  gap: 9px;
+  min-height: 37px;
+  padding: 0 7px;
+  border-radius: 5px;
+  color: var(--text-soft);
+  text-align: left;
+  cursor: pointer;
+  transition: background .15s ease, color .15s ease;
+}
+
+.morrow-professional .status-breakdown-row:hover,
+.morrow-professional .status-breakdown-row.is-selected {
+  background: var(--dash-panel-raised);
+  color: var(--text);
+}
+
+.morrow-professional .status-breakdown-row > span:nth-child(2) {
+  font-size: 12px;
+}
+
+.morrow-professional .status-breakdown-row strong {
+  color: var(--text);
+  font-size: 12px;
+  font-weight: 600;
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+}
+
+.morrow-professional .status-breakdown-row small {
+  color: var(--muted-2);
+  font-size: 10px;
+  text-align: right;
+}
+
+.morrow-professional .status-indicator,
+.morrow-professional .report-health-dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+}
+
+.morrow-professional .status-indicator-progress { background: #b58aff; }
+.morrow-professional .status-indicator-review { background: #dfa8c9; }
+.morrow-professional .status-indicator-todo { background: #81849a; }
+.morrow-professional .status-indicator-done { background: #83c9a4; }
+
+.morrow-professional .status-distribution-helper {
+  margin: auto 7px 0;
+  padding-top: 15px;
+  color: var(--muted-2);
+  font-size: 10px;
+  line-height: 1.5;
+}
+
+.morrow-professional .dashboard-overview-grid-linear {
+  grid-template-columns: minmax(0, 1.5fr) minmax(300px, .9fr);
+  margin-top: 0;
+}
+
+.morrow-professional .dashboard-focus-table-head {
+  display: grid;
+  grid-template-columns: 18px minmax(0,1fr) 73px 83px 44px 23px;
+  gap: 9px;
+  margin: 8px -2px 0;
+  padding: 0 3px 8px;
+  border-bottom: 1px solid var(--dash-line);
+}
+
+.morrow-professional .dashboard-focus-table-head::before { content: ""; }
+.morrow-professional .dashboard-focus-table-head span:first-child { padding-left: 0; }
+.morrow-professional .dashboard-focus-panel .dashboard-task-row.is-compact {
+  grid-template-columns: 18px minmax(0,1fr) 73px 83px 44px 23px;
+}
+
+.morrow-professional .dashboard-focus-panel .dashboard-task-row.is-compact .dashboard-task-main strong {
+  max-width: 100%;
+}
+
+.morrow-professional .task-filter-reset {
+  margin-left: auto;
+  color: var(--dash-purple) !important;
+}
+
+.morrow-professional .dashboard-project-health-panel {
+  align-self: stretch;
+  padding: 18px 17px 13px;
+}
+
+.morrow-professional .dashboard-project-health-panel .project-overview-list {
+  margin-top: 19px;
+}
+
+.morrow-professional .dashboard-project-health-panel .project-progress-row {
+  grid-template-columns: 30px minmax(80px, 1fr) minmax(54px, .9fr) 39px;
+  gap: 9px;
+  padding: 12px 0;
+  border-bottom: 1px solid var(--dash-line);
+}
+
+.morrow-professional .dashboard-project-health-panel .project-progress-row .project-status-label {
+  display: none;
+}
+
+.morrow-professional .dashboard-project-health-panel .project-progress-track {
+  height: 5px;
+  background: var(--dash-panel-raised);
+}
+
+.morrow-professional .dashboard-project-health-panel .project-progress-track i {
+  background: var(--dash-purple);
+}
+
+.morrow-professional .project-health-foot {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 15px;
+  padding-top: 14px;
+  color: var(--muted-2);
+  font-size: 10px;
+}
+
+.morrow-professional .project-health-foot > span {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+}
+
+.morrow-professional .health-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--green);
+}
+
+.morrow-professional .health-dot.is-review { background: #dfa8c9; }
+
+.morrow-professional .dashboard-recent-activity-panel {
+  margin-top: 14px;
+  padding: 18px 19px 0;
+}
+
+.morrow-professional .dashboard-activity-horizontal {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 20px;
+  padding: 17px 0 16px;
+}
+
+.morrow-professional .dashboard-activity-horizontal .dashboard-activity-item {
+  min-width: 0;
+  padding: 0;
+  border: 0;
+}
+
+.morrow-professional .dashboard-activity-horizontal .dashboard-activity-item p {
+  font-size: 11px;
+}
+
+/* Reports: chart-first analytics page with modular breakdowns. */
+.morrow-professional .report-kpi-strip {
+  margin-bottom: 18px;
+}
+
+.morrow-professional .report-insight-chart-panel {
+  min-height: 380px;
+}
+
+.morrow-professional .report-status-panel {
+  min-height: 380px;
+}
+
+.morrow-professional .report-project-health {
+  padding: 19px 20px 8px;
+}
+
+.morrow-professional .report-table-note {
+  color: var(--muted-2);
+  font-size: 10px;
+}
+
+.morrow-professional .report-project-table {
+  margin-top: 18px;
+}
+
+.morrow-professional .report-project-table-head,
+.morrow-professional .report-project-table-row {
+  display: grid;
+  grid-template-columns: minmax(180px, 1.4fr) minmax(90px, .6fr) minmax(160px, 1fr) minmax(120px, .8fr) minmax(70px, .55fr);
+  align-items: center;
+  gap: 14px;
+}
+
+.morrow-professional .report-project-table-head {
+  min-height: 34px;
+  border-bottom: 1px solid var(--dash-line);
+  color: var(--muted-2);
+  font-size: 10px;
+  font-weight: 650;
+  letter-spacing: .07em;
+  text-transform: uppercase;
+}
+
+.morrow-professional .report-project-table-row {
+  min-height: 58px;
+  border-bottom: 1px solid var(--dash-line);
+  color: var(--muted);
+  font-size: 12px;
+}
+
+.morrow-professional .report-project-table-row:last-child { border-bottom: 0; }
+
+.morrow-professional .report-project-table-row > span:first-child {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  color: var(--text-soft);
+}
+
+.morrow-professional .report-project-table-row > span:first-child strong {
+  font-size: 12px;
+  font-weight: 560;
+}
+
+.morrow-professional .report-project-table-row .project-code {
+  display: grid;
+  width: 28px;
+  height: 28px;
+  place-items: center;
+  flex: 0 0 auto;
+}
+
+.morrow-professional .report-project-table-row > span:nth-child(3) {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+}
+
+.morrow-professional .report-table-progress {
+  display: block;
+  width: min(100%, 110px);
+  height: 5px;
+  overflow: hidden;
+  border-radius: 5px;
+  background: var(--dash-panel-raised);
+}
+
+.morrow-professional .report-table-progress i {
+  display: block;
+  height: 100%;
+  border-radius: inherit;
+  background: var(--dash-purple);
+}
+
+.morrow-professional .report-project-table-row > span:nth-child(3) strong {
+  color: var(--text-soft);
+  font-size: 11px;
+  font-weight: 620;
+}
+
+.morrow-professional .report-project-table-row > span:nth-child(4) {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.morrow-professional .report-health-dot.is-on-track { background: var(--green); }
+.morrow-professional .report-health-dot.is-review { background: #dfa8c9; }
+
+:root[data-theme="light"] .morrow-professional .insight-range-switch button.is-active {
+  background: #fff;
+  box-shadow: 0 1px 3px rgba(36, 24, 52, .12);
+}
+
+:root[data-theme="light"] .morrow-professional .insight-created-line {
+  stroke: #c07fa6;
+}
+
+:root[data-theme="light"] .morrow-professional .legend-created {
+  background: #c07fa6;
+}
+
+@media (max-width: 1180px) {
+  .morrow-professional .dashboard-insight-grid,
+  .morrow-professional .reports-insight-grid {
+    grid-template-columns: minmax(0, 1.4fr) minmax(260px, .9fr);
+  }
+  .morrow-professional .dashboard-focus-panel .dashboard-task-row.is-compact {
+    grid-template-columns: 18px minmax(0,1fr) 65px 75px 40px 22px;
+    gap: 6px;
+  }
+}
+
+@media (max-width: 1020px) {
+  .morrow-professional .dashboard-insight-grid,
+  .morrow-professional .reports-insight-grid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .morrow-professional .insight-status-panel { min-height: 285px; }
+  .morrow-professional .dashboard-overview-grid-linear {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .morrow-professional .dashboard-project-health-panel .project-progress-row {
+    grid-template-columns: 30px minmax(0, 1fr) minmax(80px, .7fr) 40px;
+  }
+  .morrow-professional .dashboard-activity-horizontal { gap: 12px; }
+}
+
+@media (max-width: 700px) {
+  .morrow-professional .dashboard-kpi-strip { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .morrow-professional .overview-metric { padding: 13px 12px 13px 0; }
+  .morrow-professional .overview-metric + .overview-metric { padding-left: 12px; }
+  .morrow-professional .overview-metric:nth-child(3) { padding-left: 0; border-left: 0; border-top: 1px solid var(--dash-line); }
+  .morrow-professional .overview-metric:nth-child(4) { border-top: 1px solid var(--dash-line); }
+  .morrow-professional .overview-metric > strong { font-size: 24px; }
+  .morrow-professional .overview-metric > span { font-size: 10px; }
+  .morrow-professional .overview-metric > small { font-size: 9px; }
+  .morrow-professional .insight-chart-panel,
+  .morrow-professional .insight-status-panel { padding: 15px 13px 13px; }
+  .morrow-professional .insight-panel-heading { gap: 8px; }
+  .morrow-professional .insight-panel-heading h2 { font-size: 17px; }
+  .morrow-professional .insight-panel-heading p { max-width: 220px; font-size: 11px; }
+  .morrow-professional .insight-range-switch button { min-height: 27px; padding-inline: 7px; font-size: 9px; }
+  .morrow-professional .insight-chart-summary { gap: 11px; min-height: 43px; }
+  .morrow-professional .insight-chart-summary > div > strong { font-size: 18px; }
+  .morrow-professional .insight-chart-summary > div > span { font-size: 9px; }
+  .morrow-professional .insight-active-readout { max-width: 116px; }
+  .morrow-professional .insight-active-readout span { font-size: 9px; }
+  .morrow-professional .insight-trend-chart { height: 190px; min-height: 190px; }
+  .morrow-professional .insight-axis-tick { font-size: 9px; }
+  .morrow-professional .insight-x-axis-label { font-size: 9px; }
+  .morrow-professional .insight-chart-footer { font-size: 9px; }
+  .morrow-professional .dashboard-focus-table-head { display: none; }
+  .morrow-professional .dashboard-focus-panel .dashboard-task-row.is-compact { grid-template-columns: 18px minmax(0,1fr) 58px 22px; }
+  .morrow-professional .dashboard-focus-panel .dashboard-task-row.is-compact .dashboard-task-status,
+  .morrow-professional .dashboard-focus-panel .dashboard-task-row.is-compact .dashboard-task-due { display: none; }
+  .morrow-professional .dashboard-activity-horizontal { grid-template-columns: minmax(0,1fr); gap: 0; }
+  .morrow-professional .dashboard-activity-horizontal .dashboard-activity-item { padding: 12px 0; border-bottom: 1px solid var(--dash-line); }
+  .morrow-professional .dashboard-activity-horizontal .dashboard-activity-item:last-child { border-bottom: 0; }
+  .morrow-professional .report-project-table { overflow-x: auto; }
+  .morrow-professional .report-project-table-head,
+  .morrow-professional .report-project-table-row { min-width: 640px; }
+  .morrow-professional .report-project-health { padding-inline: 13px; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .morrow-professional .insight-point,
+  .morrow-professional .status-segment,
+  .morrow-professional .status-breakdown-row { transition: none; }
+}
