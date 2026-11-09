@@ -26,10 +26,20 @@ Create a premium, modern SaaS experience that feels focused and welcoming rather
 | Reference | Principle studied | How it is translated into Morrow |
 |---|---|---|
 | **Linear** | Minimal UI, typography, smooth interactions, clean layouts | Restrained borders, clear hierarchy, compact metadata, a practical three-pane workspace preview, status labels, and contextual issue details. |
-| **Raycast** | Creative visuals, animation, premium product experience | A keyboard-oriented search/command experience, strong headline treatment, dark product atmosphere, and interactions that are intended to feel immediate. |
-| **Framer** | Creative layouts, micro-interactions, modern landing-page patterns | Varied page compositions, a monitor-style product presentation, floating visual elements, editorial typography, and deliberate section transitions. |
+| **Raycast** | Creative visuals, animation, premium product experience | A keyboard-first command experience and crisp interaction feedback. The current visual system avoids copying its dark glow treatment. |
+| **Framer** | Creative layouts, micro-interactions, modern landing-page patterns | Varied page compositions, clear hierarchy, a product preview with enough scale to read, and deliberate transitions. Decorative floating visual elements have been reduced. |
 
 The references are used as **design principles**, not as templates to copy. Morrow keeps its own product concept, wording, brand mark, layouts, and interaction patterns.
+
+### Additional design research
+
+The redesign also considered recent SaaS interface studies: [Screenrove's Attio design page](https://screenrove.com/attio), [regards.design's SaaS website collection](https://www.regards.design/websites/saas), and [BestSaaSWebDesigns' 2026 review](https://bestsaaswebdesigns.com/blog/best-saas-websites). The useful themes were a near-white/neutral canvas, a labelled product interface in or near the first viewport, clear primary/secondary actions, readable type hierarchy, and a page structure that explains the product before piling on feature claims. The research informed principles, not copied page designs or assets.
+
+### Current professional visual direction
+
+The latest design reduces reliance on familiar SaaS template cues such as large gradient glows, decorative ring graphics, floating metric widgets, repeated pill labels, faux customer proof, and card grids that do not add information. The marketing system keeps the professional editorial layout, restrained surfaces, thin structural dividers, deliberate spacing, and a real workspace preview presented early in the experience. Its established brand palette is restored: deep charcoal and plum surfaces, off-white text, lavender as the primary accent, and restrained violet, soft-pink, green, and amber status accents. The dashboard remains a distinct application interface, but shares the same palette and typography.
+
+The visual goal is not to imitate a reference site. It is to make the hierarchy, product and information feel credible: show the software, explain the workflow in concrete terms, and use animation only for feedback or meaningful transitions. The shared styling is consolidated in `app/globals.css`, where named cascade layers separate tokens, foundation rules, professional layout, brand refinements, and reduced-motion behavior. Dashboard-only visualization rules remain in `app/dashboard-visuals.css`.
 
 ### Core design principles
 
@@ -45,55 +55,57 @@ The references are used as **design principles**, not as templates to copy. Morr
 
 ### Base color system
 
-The implementation uses CSS custom properties in `app/globals.css`. The default theme is dark; a light theme is also available.
+The implementation uses shared CSS custom properties in the `morrow.tokens` layer at the top of `app/globals.css`. The default marketing theme is dark; a matching light theme is also available. The dashboard uses the same theme preference and brand tokens.
 
 | Token | Dark theme | Light theme | Use |
 |---|---|---|---|
-| `--bg` | `#101210` | `#F4F5EF` | Main page background |
-| `--bg-soft` | `#151815` | `#EBECE5` | Alternate section background |
-| `--surface` | `#191D19` | `#FFFFFF` | Cards and primary surfaces |
-| `--surface-raised` | `#20251F` | `#F6F7F1` | Raised/interactive surfaces |
-| `--surface-soft` | `#1A1F1A` | `#EBEEE5` | Subtle surface variation |
-| `--text` | `#F0F2E9` | `#1B2118` | Primary text |
-| `--text-soft` | `#C0C5B9` | `#51594D` | Secondary text |
-| `--muted` | `#858D7F` | `#71796C` | Supporting copy |
-| `--line` | `rgba(221, 232, 207, 0.105)` | `rgba(37, 48, 30, 0.11)` | Subtle dividers |
-| `--accent` | `#D3EE86` | `#B1D65D` | Primary accent and actions |
-| `--violet` | `#A9A0EE` | `#766DBD` | Secondary accent |
-| `--green` | `#A9D4A2` | `#548B58` | Positive/progress states |
-| `--amber` | `#E8C78B` | `#AA7B32` | Secondary status accent |
+| `--bg` | `#09090D` | `#F7F5FB` | Main page background |
+| `--bg-soft` | `#101017` | `#EFEDF5` | Alternate section background |
+| `--surface` | `#15151E` | `#FFFFFF` | Cards and primary surfaces |
+| `--surface-raised` | `#1D1C28` | `#F4F1FA` | Raised/interactive surfaces |
+| `--surface-soft` | `#191823` | `#EEEBF4` | Subtle surface variation |
+| `--text` | `#F5F3FA` | `#191522` | Primary text |
+| `--text-soft` | `#C8C4D2` | `#514A60` | Secondary text |
+| `--muted` | `#9691A3` | `#777083` | Supporting copy |
+| `--line` | `rgba(226, 218, 255, 0.09)` | `rgba(45, 32, 70, 0.10)` | Subtle dividers |
+| `--accent` | `#B58AFF` | `#9564DF` | Primary accent and actions |
+| `--violet` | `#C58CFF` | `#8154C5` | Secondary, restrained accent |
+| `--green` | `#8ED6B1` | `#398B65` | Positive/progress states |
+| `--amber` | `#E8BF85` | `#A76D25` | Secondary status accent |
 
-The overall foundation is **deep charcoal with moss/lime accents**. Violet, lavender, sage, muted gold, and warm ivory appear as route-specific accents. The About page deliberately uses a warm ivory hero to create an editorial contrast with the darker product-led pages.
+The shared brand foundation is **deep charcoal, plum, lavender, and restrained soft-pink**. The light theme uses pale lavender surfaces and deep plum text rather than simply inverting the dark theme. Route pages keep distinct compositions and storytelling, while the shared accent system remains consistent; green and amber are reserved mainly for meaningful status and data visualizations.
 
 ### Route-specific visual signatures
 
 | Page | Visual character | Distinguishing elements |
 |---|---|---|
-| Home | Centered, minimal, product-led | Large headline, compact search launcher, workspace preview, manifesto, feature highlights, workflow tabs, pricing preview, closing CTA |
-| Product | Technical/editorial split layout | Grid-line background, left-aligned message, lavender-accented momentum visualization, floating task cards, large workspace preview |
-| How it works | Process-led editorial layout | Warm muted-gold accents, visible vertical three-step track, workflow switcher, rhythm cards, scrolling text ticker |
-| For teams | Collaborative and people-oriented | Sage-green accents, orbit/constellation graphic, role-specific cards, shared-principles section |
-| Pricing | Structured and conversion-focused | Dark olive/lime hero, plan-promise panel, pricing comparison, FAQ, reassurance strip |
-| About | Warm editorial manifesto | Ivory hero, oversized type, orbit/asterisk graphic, manifesto statement, principles, dark closing CTA |
+| Home | Product-led editorial landing page | Centered headline, concise value summary, large workspace preview in the first view, capability strip, manifesto, feature rows, workflow demo, pricing preview, direct CTA |
+| Product | Practical product explanation | Split editorial hero, clear list of workspace capabilities, large real UI preview, flat capability grid |
+| How it works | Process-led explanation | Three-step vertical sequence, interactive workflow demo, simple rhythm overview |
+| For teams | Role-based use cases | Structured team coverage list, product/design/operations/leadership use cases, shared-principles band |
+| Pricing | Decision-focused comparison | Simple plan promise, pricing cards, clear toggle, FAQ and reassurance strip |
+| About | Editorial brand story | Pale lavender/charcoal opening, large typographic statement, manifesto, principle rows and restrained CTA |
 
 ### Typography
 
-- **Primary UI and body type:** system sans-serif stack beginning with `Segoe UI Variable`, then Aptos, Helvetica Neue, and system fallbacks.
-- **Display accent:** Georgia/Times serif italic is used selectively for highlighted words and phrases.
-- **Headings:** Large, tightly tracked display text establishes hierarchy. Responsive `clamp()` sizing is used for major headings.
-- **Eyebrows and metadata:** Small uppercase labels with expanded letter spacing provide section numbering, context, and product metadata.
-- **Body copy:** Muted text color and generous line-height keep supporting descriptions readable against dark surfaces.
+Morrow uses a four-family system across all marketing routes, the floating navigation, and the workspace dashboard:
 
-No external font download is required by the current implementation.
+- **Bricolage Grotesque — display:** major page headings, section headings, dashboard view headings, and the Morrow wordmark.
+- **Switzer — interface and body:** paragraphs, navigation labels, buttons, form controls, dashboard content, and most UI text.
+- **Sentient — editorial accent:** italic emphasis, selected headline phrases, pull quotes, and other restrained serif details.
+- **Azeret Mono — technical metadata:** keyboard shortcuts, section indices, project IDs, report labels, and compact metadata.
+
+Bricolage Grotesque and Azeret Mono load from Google Fonts. Switzer and Sentient load from Fontshare; the Sentient stylesheet requests its true italic face rather than relying on browser-synthesized italics. The root layout preconnects to the font providers. `font-display: swap` is used by the providers, and CSS font stacks include local fallbacks so content remains readable while the web fonts load or when a provider is unavailable.
 
 ### Layout and surface language
 
 - Main content uses a centered container with a maximum width of approximately `1160px` and responsive side gutters.
-- The navigation shell uses a wider container of approximately `1280px`.
-- The shared header is `76px` high, sticky, and uses a translucent background with backdrop blur.
-- Sections commonly use generous vertical spacing; the shared `.section-pad` utility starts at `132px` top and bottom on wide screens, with responsive overrides.
-- Cards use restrained borders, dark/soft surfaces, moderate corner radii, and subtle shadows rather than heavy glass effects everywhere.
-- The product preview uses denser information layout than the marketing pages, reflecting the practical workspace UI studied in Linear.
+- The shared header is a fixed, floating composition with responsive side gutters. The library-native `GlassNav` is the primary desktop navigation surface; the Morrow wordmark sits to its left and utility actions sit to its right. The `GlassNav` is not nested inside a `GlassCard` or another glass wrapper. Its native liquid-glass material is themed through the library's `--lg-*` tokens: translucent plum fill, a lavender active lens, subtle violet refraction edges, and matching off-white foreground colors in dark mode; the light theme uses pale-lavender glass and deep-plum foreground colors. The same scoped tokens theme the compact `GlassMenu` and `GlassButton` controls. `LiquidGlassFilter` registers shared refraction filters. Morrow styles control placement, sizing, typography, and brand-specific material tokens.
+- Sections use generous but controlled vertical spacing; The `morrow.professional` layer in `app/globals.css` brings wide-screen section spacing into a responsive `76–116px` range.
+- Surfaces favour square-to-subtle radii, fine rules and intentional grouping. Repeated rounded card grids, background glows, decorative circular graphics, invented customer-logo walls and decorative floating widgets have been removed or de-emphasized.
+- Marketing typography uses larger headlines and legible body copy; technical labels are kept small and limited to navigation context, section indices and metadata.
+- The dashboard retains denser application UI but follows the same charcoal/plum/lavender palette, readable labels and restrained borders.
+- The product preview uses denser information layout than the marketing pages. Its sample customer workspace is labelled Juniper Studio and uses illustrative team members and task data.
 
 ---
 
@@ -104,26 +116,24 @@ No external font download is required by the current implementation.
 **Purpose:** Introduce Morrow and give visitors a high-level understanding of the product.
 
 **Structure:**
-1. Hero with `HeroCommand`, headline, supporting copy, calls to action, and product preview.
-2. Customer-style logo strip using illustrative names.
-3. Manifesto section explaining the product philosophy.
-4. Feature section with differentiated capability highlights.
+1. Centered editorial hero with a direct product promise and two actions.
+2. Large interactive workspace preview positioned near the top of the page.
+3. Compact capability strip covering Plan, Do, and Learn.
+4. Manifesto and feature rows.
 5. Interactive workflow section using `WorkflowSwitcher`.
-6. Quote/philosophy panel.
-7. Pricing preview using `PricingCards`.
-8. Closing signup call to action.
+6. Principle band, pricing preview, and closing signup CTA.
 
-**Design role:** The broadest overview of the brand. It uses a centered composition and brings the product UI into the first screenful so visitors see the product early.
+**Design role:** The product-led entry point. The workspace itself is presented early so visitors can understand the thing being sold before reading long feature descriptions.
 
 ### `/product` — Product
 
 **Purpose:** Explain what the Morrow workspace contains and let visitors explore its interface.
 
 **Structure:**
-1. Split hero with product introduction on the left and a momentum visualization on the right.
-2. Product metadata/reassurance strip.
-3. Large monitor-style product presentation using `ProductPreview`.
-4. Capability section with four product benefits.
+1. Editorial split hero with product introduction and a factual summary of the workspace flow.
+2. Product metadata strip.
+3. Large product presentation using `ProductPreview`.
+4. Flat capability grid with four product benefits.
 5. Closing product CTA.
 
 **Design role:** The most product-focused page. It moves from a high-level product promise into the interactive workspace itself.
@@ -134,10 +144,9 @@ No external font download is required by the current implementation.
 
 **Structure:**
 1. Editorial hero with a visible three-step track: Plan, Move, Learn.
-2. Animated/scrolling rhythm ticker.
-3. Interactive workflow tabs using `WorkflowSwitcher`.
-4. Three explanatory rhythm cards.
-5. Closing CTA linking visitors toward the product and pricing.
+2. Interactive workflow tabs using `WorkflowSwitcher`.
+3. Three explanatory rhythm summaries.
+4. Closing CTA linking visitors toward the product and pricing.
 
 **Design role:** A process narrative rather than a feature catalogue. The vertical track and step cards make the methodology easy to scan.
 
@@ -146,13 +155,13 @@ No external font download is required by the current implementation.
 **Purpose:** Show how the same workspace can support different roles.
 
 **Structure:**
-1. Split hero with headline and role-constellation illustration.
-2. Compact supporting strip.
-3. Role-specific grid for four team audiences (as defined in the page data).
+1. Split hero with headline and a structured team-coverage list.
+2. Compact supporting statement.
+3. Role-specific summaries for Product, Design, Operations, and Leadership.
 4. Shared-context principle section.
 5. Closing CTA.
 
-**Design role:** People-oriented and collaborative. Its sage-green accents and constellation graphic distinguish it from the product and pricing pages.
+**Design role:** Role-specific and practical. The coverage list and supporting summaries show how different teams share one operating context.
 
 ### `/pricing` — Pricing
 
@@ -172,12 +181,12 @@ No external font download is required by the current implementation.
 **Purpose:** Explain the beliefs behind Morrow and give the brand a point of view.
 
 **Structure:**
-1. Warm ivory editorial hero with oversized typography and orbital asterisk graphic.
-2. Manifesto section.
-3. Three brand-principle cards.
+1. Charcoal/plum editorial hero with oversized but restrained typography.
+2. Manifesto section with supporting explanation.
+3. Three brand-principle summaries with restrained borders.
 4. Dark closing CTA.
 
-**Design role:** The most editorial page. The warm hero deliberately changes the visual temperature while remaining connected to Morrow's typography, motifs, and messaging.
+**Design role:** The most editorial page. The hero changes the page composition while remaining connected to Morrow's shared charcoal/plum/lavender palette, typography, and messaging.
 
 ---
 
@@ -190,7 +199,8 @@ The application uses the **Next.js App Router**. Each top-level route lives in i
 ```text
 app/
 ├── layout.tsx                 Root layout, metadata, global CSS, route scroll reset
-├── globals.css               Design tokens, component styles, page styles, responsive rules
+├── globals.css               Consolidated tokens, foundation, page styles, responsive rules, and motion layers
+├── dashboard-visuals.css     Dashboard-only charts and analytics presentation
 ├── page.tsx                  Home route: /
 ├── product/
 │   └── page.tsx              /product
@@ -227,7 +237,7 @@ Every route is wrapped with `MarketingShell`. It keeps the common site chrome co
 - `ScrollEffects` activates reveal effects for marked content as it enters the viewport.
 - `SiteFooter` provides shared navigation and footer content.
 
-The page body itself remains route-specific. This is intentional: shared chrome creates continuity, while distinct page compositions prevent the site from feeling like the same template repeated six times.
+The page body itself remains route-specific. This is intentional: shared chrome creates continuity, while distinct page compositions prevent the site from feeling like the same template repeated six times. The shared stylesheet uses explicit cascade layers: tokens, foundation, professional layout, brand refinements, dashboard visuals, and reduced-motion behavior. The dashboard-specific chart stylesheet remains separate so the marketing and product surfaces can evolve without competing foundations.
 
 ### Component responsibilities
 
@@ -409,8 +419,32 @@ The most useful parts of the code to explain in a technical review are:
 - `components/product-preview.tsx` — interactive workspace state and UI composition.
 - `components/workflow-switcher.tsx` — reusable tab-driven interaction.
 - `components/pricing-cards.tsx` — billing selection and plan presentation.
-- `app/globals.css` — design tokens, page-specific layouts, responsive rules, and motion.
+- `app/globals.css` — consolidated design tokens, foundation styles, professional layout, brand refinements, and reduced-motion behavior.
+- `app/dashboard-visuals.css` — dashboard chart and analytics styling.
 
 ---
 
-**Document status:** Describes the current Morrow multi-page frontend represented by the `morrow-multipage-distinct-pages` project archive. Treat product content, sample metrics, and pricing as illustrative until a real service is connected.
+**Document status:** Describes the current Morrow multi-page frontend represented by the `morrow-professional-redesign` project archive. Treat product content, sample metrics, and pricing as illustrative until a real service is connected.
+
+
+## Navigation refinement
+
+The shared header is a floating composition rather than one large glass capsule. On desktop, the library's native `GlassNav` is the primary navigation element and owns the liquid-glass tab surface and selection interaction. The Morrow wordmark sits alongside it on the left; theme, sign-in, and signup actions sit alongside it on the right. `GlassNav` is not placed inside `GlassCard` or any second glass navbar. The theme and primary CTA use the library's `GlassButton`, while the compact navigation uses the library's `GlassMenu`. Scoped `--lg-*` overrides map the library surface to translucent plum glass and lavender selection states in dark mode, with pale lavender glass and deep-plum text in light mode.
+
+`LiquidGlassFilter` is mounted once near the app root to share the library's SVG refraction filters. The library stylesheet is imported once in `app/layout.tsx`. Morrow CSS handles only the overall positioning, responsive sizing, spacing, and brand-specific typography; it does not recreate the tab bar's lens or touch behavior.
+
+The route selector keeps its selected index synchronized with the current pathname. Selecting or dragging to a tab routes to the corresponding page, and the mobile menu marks the current route. The theme and signup controls remain available across all six routes. The glass components use restrained intensity so the navigation remains legible over the site's varied page compositions.
+
+The library documents browser-dependent rendering: Chromium applies SVG displacement to live backdrops, while Safari and Firefox use alternate lens rendering and translucent surfaces for bars, buttons, and cards. Effects therefore vary by browser, but the actual `GlassNav` component and its selected-tab interaction are retained across supported browsers.
+
+
+
+## Workspace dashboard (/dashboard)
+
+The dashboard is a separate product surface from the public marketing website. It deliberately does not reuse the floating marketing navbar. Instead, it uses an application shell with a persistent left workspace sidebar, a compact sticky top bar, and an adaptable content area. The side navigation switches between Overview, My tasks, Projects, Inbox, Calendar, and Reports.
+
+The visual language continues Morrow's charcoal / plum / lavender palette, readable labels, restrained borders, and deliberate spacing. The dashboard remains denser than the marketing pages, but the component surfaces are low-radius and the typography is intentionally legible. The dashboard takes structural inspiration from Linear's dense but calm product UI, while retaining Morrow's own palette and component styling.
+
+The Overview and Reports views were refined to be analytics-led rather than card-led. A compact KPI strip establishes context, then a large created-vs-completed time-series chart and a segmented issue-status visualization carry the main visual weight. Status segments are interactive: selecting a status filters the Overview focus list, while the Reports breakdown opens the matching issue list. The chart switches between six- and twelve-week windows and exposes point-level values on hover, keyboard focus, and selection. Project progress is presented as a compact table/list rather than another oversized card grid. This adapts Linear's documented dashboard model—metric blocks, charts, tables, independent filters, and drill-down into underlying issues—without copying Linear's UI or using its assets. Sources: [Linear Dashboards](https://linear.app/docs/dashboards), [Linear Insights](https://linear.app/docs/insights), and [Linear Insights overview](https://linear.app/insights).
+
+`components/dashboard-app.tsx` owns the dashboard's client-side interaction state and UI composition. It includes local sample data for tasks, projects, and activity; task search and filters; task completion and status updates; a task details drawer; a create-task dialog; inbox read states; week navigation in Calendar; and interactive SVG-based created-versus-completed analytics, issue-status distribution, and project progress reporting. All data is illustrative and stored in component state. No authentication, API, database, or cross-session persistence is connected.

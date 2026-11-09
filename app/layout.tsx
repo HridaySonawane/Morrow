@@ -1,9 +1,6 @@
 import type { Metadata } from "next";
 import type { ReactNode } from "react";
-import "@zakisheriff/liquid-glass/styles.css";
 import "./globals.css";
-import "./professional.css";
-import "./palette-restoration.css";
 import "./dashboard-visuals.css";
 import { LiquidGlassFilter } from "@zakisheriff/liquid-glass";
 import { RouteScrollReset } from "@/components/route-scroll-reset";

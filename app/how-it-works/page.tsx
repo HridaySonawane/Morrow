@@ -26,7 +26,7 @@ export default function HowItWorksPage() {
               <div className="rhythm-hero-index"><span>THE MORROW METHOD</span><span>01 — 03</span></div>
               <h1>A clear process<br />keeps work <em>moving.</em></h1>
               <p>Good work happens in stages: set a direction, make the next step clear, then carry what you learn into the next cycle.</p>
-              <div className="rhythm-hero-actions"><Link className="button button-primary" href="/product">Explore the workspace <ArrowUpRight size={15} /></Link><a className="rhythm-text-link" href="#the-rhythm">Follow the rhythm <ArrowRight size={14} /></a></div>
+              <div className="rhythm-hero-actions"><Link className="button button-primary" href="/dashboard">Explore the workspace <ArrowUpRight size={15} /></Link><a className="rhythm-text-link" href="#the-rhythm">Follow the rhythm <ArrowRight size={14} /></a></div>
               <div className="rhythm-hero-footnote"><span className="rhythm-footnote-line" /> PLAN · MOVE · LEARN</div>
             </div>
             <div className="rhythm-track" aria-label="The three steps in the Morrow workflow">

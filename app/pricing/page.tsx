@@ -39,7 +39,7 @@ export default function PricingPage() {
 
         <section className="faq-section section-pad"><div className="page-container faq-layout"><div><p className="eyebrow">A FEW GOOD QUESTIONS / 02</p><h2>Good to<br /><span>know.</span></h2><p>Still have something on your mind? <a href="mailto:hello@morrow.work">Talk to our team <ArrowUpRight size={13} /></a></p></div><div className="faq-list">{faqs.map((faq) => <details className="faq-item" key={faq.question}><summary>{faq.question}<ChevronDown size={16} /></summary><p>{faq.answer}</p></details>)}</div></div></section>
 
-        <section className="pricing-trust-strip"><div className="page-container"><span><Check size={14} /> Start free</span><span><Check size={14} /> Change plans anytime</span><span><Check size={14} /> Built for real teams</span><Link href="/product">Explore the workspace <ArrowUpRight size={14} /></Link></div></section>
+        <section className="pricing-trust-strip"><div className="page-container"><span><Check size={14} /> Start free</span><span><Check size={14} /> Change plans anytime</span><span><Check size={14} /> Built for real teams</span><Link href="/dashboard">Explore the workspace <ArrowUpRight size={14} /></Link></div></section>
       </main>
     </MarketingShell>
   );

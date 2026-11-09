@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import Link from "next/link";
 import { ArrowRight, Check, Circle, Clock3, Layers3, MessageSquare, Sparkles, Target, Zap } from "lucide-react";
 
 const steps = [
@@ -19,9 +20,9 @@ export function WorkflowSwitcher() {
         {steps.map((step, index) => <button key={step.id} role="tab" aria-selected={active === index} className={`workflow-tab ${active === index ? "active" : ""}`} onClick={() => setActive(index)}><span>{step.number}</span>{step.label}</button>)}
       </div>
       <div className="workflow-content" key={current.id}>
-        <div className="workflow-copy"><span className="workflow-tag"><Icon size={13} /> {current.tag}</span><h3>{current.title}</h3><p>{current.copy}</p><div className="workflow-footnote"><span><Check size={13} /></span>{current.footer}</div><a className="text-link" href="/pricing">Explore the workspace <ArrowRight size={15} /></a></div>
+        <div className="workflow-copy"><span className="workflow-tag"><Icon size={13} /> {current.tag}</span><h3>{current.title}</h3><p>{current.copy}</p><div className="workflow-footnote"><span><Check size={13} /></span>{current.footer}</div><Link className="text-link" href="/dashboard">Explore the workspace <ArrowRight size={15} /></Link></div>
         <div className="workflow-visual">
-          <div className="flow-card-top"><span className="flow-app-mark"><Layers3 size={14} /></span><div><strong>Meridian Studio</strong><small>Team workspace / This week</small></div><span className="flow-menu">•••</span></div>
+          <div className="flow-card-top"><span className="flow-app-mark"><Layers3 size={14} /></span><div><strong>Juniper Studio</strong><small>Team workspace / This week</small></div><span className="flow-menu">•••</span></div>
           <div className="flow-card-title"><span>YOUR TEAM'S NEXT MOVES</span><span className="flow-count">0{active + 1} / 03</span></div>
           <div className="flow-task-list">{current.task.map((task, index) => <div className="flow-task" key={task}><span className={`flow-task-check ${index < active ? "done" : ""}`}>{index < active ? <Check size={11} /> : <Circle size={12} />}</span><span>{task}</span><span className={`flow-task-status status-index-${index}`}>{index === active ? "In focus" : index < active ? "Done" : "Up next"}</span></div>)}</div>
           <div className="flow-card-bottom"><div className="flow-people"><span className="mini-avatar avatar-a">A</span><span className="mini-avatar avatar-b">J</span><span className="mini-avatar avatar-c">S</span><span className="flow-people-label">Your team</span></div><div className="flow-time"><Clock3 size={12} /> Updated just now</div></div>

@@ -2,6 +2,8 @@
 
 Morrow is a multi-page SaaS marketing website and interactive product preview created for the Frontend Development Assignment. It translates the design lessons from Linear, Raycast, and Framer into an original product identity rather than copying any one reference.
 
+The detailed design and application structure is documented in [`MORROW_DESIGN_AND_APP_STRUCTURE.md`](./MORROW_DESIGN_AND_APP_STRUCTURE.md).
+
 ## Product concept
 
 Morrow is a fictional team workspace that helps people plan priorities, keep work moving, and understand team momentum. The site is designed as a polished, responsive marketing experience with an embedded product preview.
@@ -14,7 +16,7 @@ The implementation uses the supplied screenshots as design-study material, not a
 - **Raycast screenshot:** the command palette keeps a keyboard-first interaction pattern, but the current marketing hero no longer uses the reference's dramatic glow treatment.
 - **Framer screenshot:** the page uses deliberate changes in composition and gives the product preview enough scale to be understood. Decorative perspective and ambient glow have been reduced in favour of a cleaner product presentation.
 
-The Morrow brand, copy, product concept, and UI remain original. The professional design pass keeps a product-led editorial layout, clearer hierarchy, restrained surfaces, thin structural rules, and a large workspace preview near the top of the home page. Morrow retains its established charcoal/plum palette with lavender as the primary accent and restrained soft-pink, green, and amber as supporting status colours. Decorative orbs, fake social-proof treatments, and repeated floating cards have been removed in favour of structured information and purposeful product surfaces.
+The Morrow brand, copy, product concept, and UI remain original. The current design uses a product-led editorial layout, clear hierarchy, restrained surfaces, thin structural rules, and a large workspace preview near the top of the home page. Morrow retains its established charcoal/plum palette with lavender as the primary accent; soft-pink, green, and amber are used sparingly for supporting states and data. Decorative effects are kept secondary to the product surfaces and the information they contain.
 
 ## Additional design research
 
@@ -69,7 +71,7 @@ npm start
 
 ## Routes and pages
 
-The website is a multi-page Next.js App Router application. The desktop header places the library's `GlassNav` directly as the primary floating navigation surface, with the Morrow wordmark to its left and utility actions to its right. `GlassNav` is not wrapped in or nested inside a second glass navbar. `GlassMenu` handles compact navigation, while `GlassButton` powers the theme and primary CTA controls. `LiquidGlassFilter` supplies shared SVG refraction definitions. The package stylesheet is imported once at the root layout. The package is independent of Apple and is licensed under MIT: [project repository](https://github.com/zakisheriff/Liquid-Glass).
+The website is a multi-page Next.js App Router application. The desktop header places the library's `GlassNav` directly as the primary floating navigation surface, with the Morrow wordmark to its left and utility actions to its right. `GlassNav` is not wrapped in or nested inside a second glass navbar. `GlassMenu` handles compact navigation, while `GlassButton` powers the theme and primary CTA controls. `LiquidGlassFilter` supplies shared SVG refraction definitions. The package stylesheet is imported once from `app/globals.css` in the `morrow.vendor` cascade layer; shared brand and component styles are layered after it. The package is independent of Apple and is licensed under MIT: [project repository](https://github.com/zakisheriff/Liquid-Glass).
 
 
 
@@ -111,9 +113,8 @@ The information design takes inspiration from Linear's Insights and Dashboards p
 
 ```text
 app/
-  globals.css              Base design tokens, shared styles, and legacy component foundations
-  professional.css         Professional layout, hierarchy, and responsive overrides
-  palette-restoration.css  Original charcoal/plum/lavender palette and theme tokens
+  globals.css              Consolidated palette tokens, foundation, marketing, brand, and motion layers
+  dashboard-visuals.css    Dashboard-specific chart and analytics presentation
   layout.tsx               Root layout and shared metadata
   page.tsx                 Home / brand introduction
   product/page.tsx         Product overview and workspace preview
@@ -142,7 +143,7 @@ public/
 ## Design decisions
 
 - The current marketing site is dark-first: deep charcoal (`#09090D`), plum surfaces (`#15151E`), off-white text (`#F5F3FA`), and lavender actions (`#B58AFF`). Light mode uses pale lavender surfaces, deep-plum text, and a darker violet action colour.
-- The visual redesign deliberately removes common template cues: large ambient gradients, orbital graphics, decorative floating metric cards, invented social proof, repeated pill badges, and card grids without a clear information purpose.
+- The visual system reduces reliance on common template cues such as ambient gradients, decorative circular graphics, floating metric cards, invented social proof, repeated pill badges, and card grids without a clear information purpose.
 - The home page introduces the product with a split editorial hero and a large, actual workspace preview near the top of the page. The interface is the evidence for the product promise.
 - Features and team use cases are presented as structured rows and grouped information, rather than every content item being placed in a rounded card. A small number of surfaces remain where they clarify interaction or comparison.
 - Bricolage Grotesque gives major headings a distinctive display voice; Switzer keeps body copy and UI controls readable; Sentient supplies restrained editorial emphasis; Azeret Mono is reserved for technical metadata and keyboard hints.
@@ -172,7 +173,7 @@ Internal page navigation starts at the top of the destination route. A small cli
 
 The marketing routes use distinct compositions rather than repeating one shared hero template:
 
-- **Home** — left-aligned product-led hero, concise value summary, large workspace preview, capability strip, feature rows, workflow demo, and clear CTA.
+- **Home** — centered product-led hero, concise value summary, large workspace preview, capability strip, manifesto, feature rows, workflow demo, and clear CTA.
 - **Product** — editorial split hero, factual capability list, prominent workspace preview, and a restrained capability grid.
 - **How it works** — a readable three-step process track, interactive workflow tabs, and a short explanation of the repeatable team rhythm.
 - **For teams** — a structured overview of how Product, Design, Operations, and Leadership use the same shared context, followed by four role-specific summaries.

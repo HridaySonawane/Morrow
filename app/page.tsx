@@ -1,3 +1,4 @@
+import Link from "next/link";
 import { ArrowRight, ArrowUpRight, Compass, Focus, Workflow, LockKeyhole } from "lucide-react";
 import { ProductPreview } from "@/components/product-preview";
 import { WorkflowSwitcher } from "@/components/workflow-switcher";
@@ -26,7 +27,7 @@ export default function Home() {
               </div>
             </div>
             <div className="hero-preview-wrap" id="product"><ProductPreview /></div>
-            <div className="home-preview-caption"><span>THE MORROW WORKSPACE</span><span>Projects · People · Progress</span></div>
+            <div className="home-preview-caption"><span>THE MORROW WORKSPACE</span><span>A live view of the work</span></div>
           </div>
         </section>
 
@@ -46,7 +47,7 @@ export default function Home() {
               <p className="eyebrow">WHY MORROW EXISTS</p>
               <h2>Work should move forward.<br /><span>Not around in circles.</span></h2>
               <p className="manifesto-body">The work itself is hard enough. Morrow gives teams a shared place to set priorities, keep decisions attached to projects and understand what needs attention next. Less searching for context. Fewer status loops. More time for the work.</p>
-              <a className="text-link" href="/about">Read our approach <ArrowRight size={15} /></a>
+              <Link className="text-link" href="/about">Read our approach <ArrowRight size={15} /></Link>
             </div>
           </div>
         </section>

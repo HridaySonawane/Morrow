@@ -75,7 +75,7 @@ export function ProductPreview() {
           <aside className="app-sidebar">
             <button className="workspace-switch" onClick={() => notify("Workspace switcher opened")}>
               <span className="workspace-avatar">m</span>
-              <span><strong>Meridian Studio</strong><small>Pro workspace</small></span>
+              <span><strong>Juniper Studio</strong><small>Pro workspace</small></span>
               <ChevronDown size={13} />
             </button>
             <button className="sidebar-search" onClick={() => window.dispatchEvent(new Event("morrow:open-command"))}><Search size={13} /> Search anything <kbd>⌘ K</kbd></button>
@@ -99,7 +99,7 @@ export function ProductPreview() {
             <div className="sidebar-bottom">
               <button className="sidebar-link" onClick={() => notify("Settings are available in the full workspace")}><Settings2 size={14} /> Settings</button>
               <button className="sidebar-link" onClick={() => notify("Help center opened")}><Users size={14} /> Help & support</button>
-              <div className="user-profile"><span className="mini-avatar avatar-d">O</span><span><strong>Olivia Parker</strong><small>olivia@meridian.co</small></span><MoreHorizontal size={15} /></div>
+              <div className="user-profile"><span className="mini-avatar avatar-d">O</span><span><strong>Olivia Parker</strong><small>olivia@juniper.studio</small></span><MoreHorizontal size={15} /></div>
             </div>
           </aside>
 

@@ -226,7 +226,7 @@ export function DashboardApp() {
           <button type="button" className="dashboard-sidebar-close" onClick={() => setMobileNavOpen(false)} aria-label="Close sidebar"><X size={17} /></button>
           <button type="button" className="dashboard-workspace-switch" onClick={() => showToast("Workspace switcher is ready for connected workspaces")}>
             <span className="workspace-monogram">M</span>
-            <span className="dashboard-workspace-copy"><strong>Meridian Studio</strong><small>Pro workspace</small></span>
+            <span className="dashboard-workspace-copy"><strong>Juniper Studio</strong><small>Pro workspace</small></span>
             <ChevronDown size={14} />
           </button>
           <button type="button" className="dashboard-sidebar-search" onClick={() => searchRef.current?.focus()}><Search size={14} /><span>Search anything</span><kbd>⌘ K</kbd></button>
@@ -251,7 +251,7 @@ export function DashboardApp() {
         <div className="dashboard-sidebar-bottom">
           <div className="dashboard-upgrade-card"><span className="upgrade-spark"><Sparkles size={15} /></span><strong>Make room for more.</strong><p>Bring the whole team into one calmer workspace.</p><button type="button" onClick={() => showToast("You're already exploring the Pro workspace")}>Explore Pro <ArrowUpRight size={13} /></button></div>
           <button type="button" className="dashboard-nav-item" onClick={() => showToast("Workspace settings are coming soon")}><Settings2 size={16} /><span>Settings</span></button>
-          <div className="dashboard-user-profile"><Avatar initials="OP" tone="sand" /><span><strong>Olivia Parker</strong><small>olivia@meridian.co</small></span><button type="button" aria-label="Profile options" onClick={() => showToast("Profile options opened")}><MoreHorizontal size={17} /></button></div>
+          <div className="dashboard-user-profile"><Avatar initials="OP" tone="sand" /><span><strong>Olivia Parker</strong><small>olivia@juniper.studio</small></span><button type="button" aria-label="Profile options" onClick={() => showToast("Profile options opened")}><MoreHorizontal size={17} /></button></div>
         </div>
       </aside>
 
@@ -259,7 +259,7 @@ export function DashboardApp() {
         <header className="dashboard-topbar">
           <div className="dashboard-topbar-left">
             <button type="button" className="dashboard-mobile-menu" aria-label="Open navigation" onClick={() => setMobileNavOpen(true)}><Menu size={19} /></button>
-            <div className="dashboard-breadcrumb"><span>Meridian Studio</span><span className="breadcrumb-slash">/</span><strong>{view}</strong></div>
+            <div className="dashboard-breadcrumb"><span>Juniper Studio</span><span className="breadcrumb-slash">/</span><strong>{view}</strong></div>
           </div>
           <div className="dashboard-topbar-actions">
             <label className="dashboard-global-search"><Search size={15} /><input ref={searchRef} value={search} onChange={(event) => setSearch(event.target.value)} placeholder="Search tasks, projects..." aria-label="Search tasks and projects" /><kbd>⌘ K</kbd></label>
@@ -335,7 +335,7 @@ function OverviewView({
     <>
       <div className="dashboard-page-heading dashboard-overview-heading">
         <div>
-          <div className="dashboard-eyebrow"><span className="dashboard-live-dot" /> MONDAY, NOVEMBER 09, 2026 <span className="eyebrow-divider" /> MERIDIAN STUDIO</div>
+          <div className="dashboard-eyebrow"><span className="dashboard-live-dot" /> MONDAY, NOVEMBER 09, 2026 <span className="eyebrow-divider" /> JUNIPER STUDIO</div>
           <h1>Good morning, Olivia<span>.</span></h1>
           <p>Your workspace at a glance. See what is moving, what is complete, and where the team needs attention.</p>
         </div>

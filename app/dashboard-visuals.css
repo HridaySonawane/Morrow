@@ -1,3 +1,5 @@
+/* Dashboard-specific analytics layer. Imported after globals.css; layer order is declared centrally. */
+@layer morrow.dashboard {
 /* --------------------------------------------------------------------------
    Morrow workspace analytics — Linear-inspired, not a replica.
    Data visualizations are the primary surface; panels stay quiet and legible.
@@ -412,9 +414,9 @@
   max-width: 100%;
 }
 
-.morrow-professional .task-filter-reset {
+.morrow-professional .dashboard-app .task-filter-reset {
   margin-left: auto;
-  color: var(--dash-purple) !important;
+  color: var(--dash-purple);
 }
 
 .morrow-professional .dashboard-project-health-panel {
@@ -678,8 +680,5 @@
   .morrow-professional .report-project-health { padding-inline: 13px; }
 }
 
-@media (prefers-reduced-motion: reduce) {
-  .morrow-professional .insight-point,
-  .morrow-professional .status-segment,
-  .morrow-professional .status-breakdown-row { transition: none; }
 }
+

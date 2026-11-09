@@ -52,10 +52,10 @@ export function SiteHeader() {
   const navItems = [
     { label: "Home", href: "/", icon: House },
     { label: "Product", href: "/product", icon: Layers3 },
-    { label: "Workflow", href: "/how-it-works", icon: Workflow },
-    { label: "Teams", href: "/teams", icon: UsersRound },
+    { label: "How it works", href: "/how-it-works", icon: Workflow },
+    { label: "For teams", href: "/teams", icon: UsersRound },
     { label: "Pricing", href: "/pricing", icon: CreditCard },
-    { label: "About", href: "/about", icon: Compass },
+    { label: "Our approach", href: "/about", icon: Compass },
   ];
 
   const activeIndex = Math.max(0, navItems.findIndex((item) =>
