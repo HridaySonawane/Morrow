@@ -1,14 +1,50 @@
 "use client";
 
 import { useEffect, useRef, useState, type FormEvent } from "react";
+import { useGSAP } from "@gsap/react";
+import gsap from "gsap";
 import { ArrowRight, Check, Sparkles, X } from "lucide-react";
+
+gsap.registerPlugin(useGSAP);
 
 export function SignupModal({ open, onClose }: { open: boolean; onClose: () => void }) {
   const [email, setEmail] = useState("");
   const [submitted, setSubmitted] = useState(false);
+  const backdropRef = useRef<HTMLDivElement>(null);
   const dialogRef = useRef<HTMLElement>(null);
   const emailRef = useRef<HTMLInputElement>(null);
   const previouslyFocused = useRef<HTMLElement | null>(null);
+
+  useGSAP(() => {
+    if (!open) return;
+
+    const media = gsap.matchMedia();
+    media.add("(prefers-reduced-motion: no-preference)", () => {
+      if (submitted) {
+        gsap.fromTo(".success-state", { autoAlpha: 0, y: 10 }, {
+          autoAlpha: 1,
+          y: 0,
+          duration: 0.35,
+          ease: "power2.out",
+        });
+        return;
+      }
+
+      gsap.fromTo(".modal-backdrop", { autoAlpha: 0 }, {
+        autoAlpha: 1,
+        duration: 0.18,
+        ease: "power1.out",
+      });
+      gsap.fromTo(".signup-modal", { autoAlpha: 0, y: 14, scale: 0.985 }, {
+        autoAlpha: 1,
+        y: 0,
+        scale: 1,
+        duration: 0.32,
+        ease: "power3.out",
+      });
+    });
+    return () => media.revert();
+  }, { scope: backdropRef, dependencies: [open, submitted], revertOnUpdate: true });
 
   useEffect(() => {
     if (!open) {
@@ -62,7 +98,7 @@ export function SignupModal({ open, onClose }: { open: boolean; onClose: () => v
   }
 
   return (
-    <div className="modal-backdrop" onMouseDown={(event) => { if (event.target === event.currentTarget) onClose(); }}>
+    <div ref={backdropRef} className="modal-backdrop" onMouseDown={(event) => { if (event.target === event.currentTarget) onClose(); }}>
       <section ref={dialogRef} className="signup-modal" role="dialog" aria-modal="true" aria-labelledby="signup-heading" tabIndex={-1}>
         <button className="modal-close icon-button" type="button" onClick={onClose} aria-label="Close dialog"><X size={18} /></button>
         <div className="modal-symbol"><Sparkles size={21} /></div>

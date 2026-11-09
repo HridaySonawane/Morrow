@@ -1,8 +1,12 @@
 "use client";
 
-import { useState } from "react";
+import { useRef, useState } from "react";
+import { useGSAP } from "@gsap/react";
+import gsap from "gsap";
 import Link from "next/link";
 import { ArrowRight, Check, Circle, Clock3, Layers3, MessageSquare, Sparkles, Target, Zap } from "lucide-react";
+
+gsap.registerPlugin(useGSAP);
 
 const steps = [
   { id: "plan", number: "01", label: "Find your focus", title: "Start with what matters.", copy: "Bring your goals, projects, and people into one shared view. Everyone knows what deserves their attention — and what can wait.", icon: Target, tag: "A clearer direction", task: ["Set a meaningful team goal", "Give the next milestone an owner", "Keep the whole team in sync"], footer: "One direction. Less second-guessing." },
@@ -12,10 +16,29 @@ const steps = [
 
 export function WorkflowSwitcher() {
   const [active, setActive] = useState(0);
+  const moduleRef = useRef<HTMLDivElement>(null);
+  const hasMounted = useRef(false);
   const current = steps[active];
+
+  useGSAP(() => {
+    if (!hasMounted.current) {
+      hasMounted.current = true;
+      return;
+    }
+
+    const media = gsap.matchMedia();
+    media.add("(prefers-reduced-motion: no-preference)", () => {
+      gsap.fromTo(
+        ".workflow-content > *",
+        { autoAlpha: 0, y: 12 },
+        { autoAlpha: 1, y: 0, duration: 0.38, stagger: 0.06, ease: "power2.out" },
+      );
+    });
+    return () => media.revert();
+  }, { scope: moduleRef, dependencies: [active], revertOnUpdate: true });
   const Icon = current.icon;
   return (
-    <div className="workflow-module">
+    <div className="workflow-module" ref={moduleRef}>
       <div className="workflow-tabs" role="tablist" aria-label="How Morrow works">
         {steps.map((step, index) => <button key={step.id} role="tab" aria-selected={active === index} className={`workflow-tab ${active === index ? "active" : ""}`} onClick={() => setActive(index)}><span>{step.number}</span>{step.label}</button>)}
       </div>

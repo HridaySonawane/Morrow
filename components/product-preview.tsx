@@ -1,11 +1,15 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useMemo, useRef, useState } from "react";
+import { useGSAP } from "@gsap/react";
+import gsap from "gsap";
 import {
   Activity, ArrowUpRight, Bell, CalendarDays, Check, ChevronDown,
   Circle, CircleDot, Command, FileText, Filter, Inbox, Layers3, ListFilter,
   MoreHorizontal, Plus, Search, Settings2, Users, X, Zap,
 } from "lucide-react";
+
+gsap.registerPlugin(useGSAP);
 
 type Status = "In progress" | "In review" | "Backlog" | "Done";
 type Task = {
@@ -44,11 +48,69 @@ export function ProductPreview() {
   const [filterMine, setFilterMine] = useState(false);
   const [notice, setNotice] = useState("");
   const [view, setView] = useState<"List" | "Board">("List");
+  const previewRef = useRef<HTMLDivElement>(null);
+  const noticeRef = useRef<HTMLDivElement>(null);
+  const previousSelection = useRef(selectedId);
+  const previousView = useRef(view);
+  const previousFilterState = useRef(filterOpen);
   const selectedTask = tasks.find((task) => task.id === selectedId) ?? tasks[0];
   const visibleTasks = useMemo(
     () => filterMine ? tasks.filter((task) => task.assignee === "Olivia Parker") : tasks,
     [filterMine, tasks],
   );
+
+  useGSAP(() => {
+    const selectionChanged = previousSelection.current !== selectedId;
+    const viewChanged = previousView.current !== view;
+    const filterChanged = previousFilterState.current !== filterOpen;
+    previousSelection.current = selectedId;
+    previousView.current = view;
+    previousFilterState.current = filterOpen;
+    if (!selectionChanged && !viewChanged && !filterChanged) return;
+
+    const media = gsap.matchMedia();
+    media.add("(prefers-reduced-motion: no-preference)", () => {
+      if (selectionChanged) {
+        gsap.fromTo(".details-content", { autoAlpha: 0, y: 7 }, {
+          autoAlpha: 1,
+          y: 0,
+          duration: 0.24,
+          ease: "power2.out",
+        });
+      }
+      if (viewChanged) {
+        gsap.fromTo(".issue-groups, .issue-board", { autoAlpha: 0, y: 6 }, {
+          autoAlpha: 1,
+          y: 0,
+          duration: 0.26,
+          ease: "power2.out",
+        });
+      }
+      if (filterChanged && filterOpen) {
+        gsap.fromTo(".project-filter-popover", { autoAlpha: 0, y: 6 }, {
+          autoAlpha: 1,
+          y: 0,
+          duration: 0.18,
+          ease: "power2.out",
+        });
+      }
+    });
+    return () => media.revert();
+  }, { scope: previewRef, dependencies: [selectedId, view, filterOpen], revertOnUpdate: true });
+
+  useGSAP(() => {
+    if (!notice) return;
+    const media = gsap.matchMedia();
+    media.add("(prefers-reduced-motion: no-preference)", () => {
+      gsap.fromTo(noticeRef.current, { autoAlpha: 0, y: 8 }, {
+        autoAlpha: 1,
+        y: 0,
+        duration: 0.2,
+        ease: "power2.out",
+      });
+    });
+    return () => media.revert();
+  }, { scope: previewRef, dependencies: [notice], revertOnUpdate: true });
 
   function completeTask(id: string) {
     setTasks((current) => current.map((task) => task.id === id ? { ...task, status: task.status === "Done" ? "In progress" : "Done" } : task));
@@ -64,7 +126,7 @@ export function ProductPreview() {
   const groups: Status[] = ["In progress", "In review", "Backlog", "Done"];
 
   return (
-    <div className="monitor-stage">
+    <div className="monitor-stage" ref={previewRef}>
       <div className="product-frame" id="product">
         <div className="browser-chrome">
           <div className="window-dots"><i /><i /><i /></div>
@@ -168,7 +230,7 @@ export function ProductPreview() {
             </div>
           </aside>
         </div>
-        {notice && <div className="preview-toast" role="status"><Check size={13} /> {notice} <button onClick={() => setNotice("")} aria-label="Dismiss notification"><X size={12} /></button></div>}
+        {notice && <div ref={noticeRef} className="preview-toast" role="status"><Check size={13} /> {notice} <button onClick={() => setNotice("")} aria-label="Dismiss notification"><X size={12} /></button></div>}
       </div>
       <div className="monitor-stand" aria-hidden="true"><span /></div>
       <div className="preview-caption"><span><span className="live-pulse" /> A workspace that feels like yours</span><span><Command size={12} /> Press <kbd>Ctrl / ⌘ K</kbd> to jump anywhere</span></div>

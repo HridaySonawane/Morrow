@@ -1,0 +1,18 @@
+@layer morrow.motion{
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  *, *::before, *::after {
+    scroll-behavior: auto;
+    animation-duration: .01ms;
+    animation-iteration-count: 1;
+    transition-duration: .01ms;
+  }
+  .hero-orbit, .focus-ring, .space-orbit,
+  .product-float-card, .team-map-ring-two, .rhythm-marquee > div {
+    animation: none;
+  }
+  .product-frame, .product-frame:hover, .workflow-visual, .feature-card {
+    transform: none;
+  }
+}
+}

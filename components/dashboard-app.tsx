@@ -2,6 +2,8 @@
 
 import Link from "next/link";
 import { useEffect, useMemo, useRef, useState, type FormEvent } from "react";
+import { useGSAP } from "@gsap/react";
+import gsap from "gsap";
 import {
   Activity, ArrowRight, ArrowUpRight, Bell, CalendarDays,
   Check, CheckCheck, ChevronDown, ChevronLeft, ChevronRight, Circle,
@@ -9,6 +11,8 @@ import {
   Inbox, LayoutDashboard, ListTodo, Menu, MoreHorizontal, Moon, Plus, Search,
   Settings2, SlidersHorizontal, Sparkles, Sun, X,
 } from "lucide-react";
+
+gsap.registerPlugin(useGSAP);
 
 type WorkspaceView = "Overview" | "My tasks" | "Projects" | "Inbox" | "Calendar" | "Reports";
 type TaskStatus = "In progress" | "In review" | "Todo" | "Done";
@@ -99,6 +103,21 @@ function DashboardLogo() {
 
 export function DashboardApp() {
   const [view, setView] = useState<WorkspaceView>("Overview");
+  const motionScope = useRef<HTMLDivElement>(null);
+  const toastRef = useRef<HTMLDivElement>(null);
+  const previousView = useRef(view);
+
+  useGSAP(() => {
+    if (previousView.current === view) return;
+    previousView.current = view;
+
+    const media = gsap.matchMedia();
+    media.add("(prefers-reduced-motion: no-preference)", () => {
+      const panels = gsap.utils.toArray<HTMLElement>(".dashboard-content > *", motionScope.current);
+      gsap.from(panels, { autoAlpha: 0, y: 12, duration: 0.42, stagger: 0.045, ease: "power2.out" });
+    });
+    return () => media.revert();
+  }, { scope: motionScope, dependencies: [view], revertOnUpdate: true });
   const [tasks, setTasks] = useState(seedTasks);
   const [activity, setActivity] = useState(seedActivity);
   const [selectedTask, setSelectedTask] = useState<Task | null>(null);
@@ -112,6 +131,20 @@ export function DashboardApp() {
   const [theme, setTheme] = useState<"dark" | "light">("dark");
   const [weekOffset, setWeekOffset] = useState(0);
   const searchRef = useRef<HTMLInputElement>(null);
+
+  useGSAP(() => {
+    if (!toastRef.current) return;
+    const media = gsap.matchMedia();
+    media.add("(prefers-reduced-motion: no-preference)", () => {
+      gsap.fromTo(toastRef.current, { autoAlpha: 0, y: 10 }, {
+        autoAlpha: 1,
+        y: 0,
+        duration: 0.24,
+        ease: "power2.out",
+      });
+    });
+    return () => media.revert();
+  }, { scope: motionScope, dependencies: [toast], revertOnUpdate: true });
 
   useEffect(() => {
     const saved = window.localStorage.getItem("morrow-theme");
@@ -218,7 +251,7 @@ export function DashboardApp() {
   }
 
   return (
-    <div className="dashboard-app">
+    <div className="dashboard-app" ref={motionScope}>
       {mobileNavOpen && <button type="button" className="dashboard-mobile-backdrop" aria-label="Close navigation" onClick={() => setMobileNavOpen(false)} />}
       <aside className={`dashboard-sidebar ${mobileNavOpen ? "is-open" : ""}`}>
         <div className="dashboard-sidebar-top">
@@ -316,7 +349,7 @@ export function DashboardApp() {
 
       {selectedTask && <TaskDetail task={selectedTask} onClose={() => setSelectedTask(null)} onToggle={() => toggleTask(selectedTask.id)} onStatus={(status) => updateTaskStatus(selectedTask.id, status)} />}
       {taskModalOpen && <NewTaskModal onClose={() => setTaskModalOpen(false)} onSubmit={createTask} />}
-      {toast && <div className="dashboard-toast" role="status"><Check size={15} />{toast}</div>}
+      {toast && <div ref={toastRef} className="dashboard-toast" role="status"><Check size={15} />{toast}</div>}
     </div>
   );
 }
@@ -618,11 +651,31 @@ function ReportsView({ tasks, projects, onExploreStatus }: { tasks: Task[]; proj
 }
 
 function TaskDetail({ task, onClose, onToggle, onStatus }: { task: Task; onClose: () => void; onToggle: () => void; onStatus: (status: TaskStatus) => void }) {
-  return <div className="dashboard-drawer-backdrop" role="presentation" onMouseDown={(event) => { if (event.target === event.currentTarget) onClose(); }}><aside className="dashboard-task-drawer" role="dialog" aria-modal="true" aria-label={`Task details: ${task.title}`}><div className="drawer-topline"><span>{task.id}</span><button type="button" onClick={onClose} aria-label="Close task details"><X size={18} /></button></div><div className="drawer-title-wrap"><span className="dashboard-panel-kicker">TASK DETAILS</span><h2>{task.title}</h2><span className="drawer-project-label"><FolderKanban size={13} /> {task.project}</span></div><div className="drawer-actions"><button type="button" className="dashboard-secondary-button" onClick={onToggle}>{task.status === "Done" ? <Circle size={14} /> : <Check size={14} />}{task.status === "Done" ? "Reopen task" : "Mark complete"}</button><button type="button" className="dashboard-kebab" aria-label="More task options"><MoreHorizontal size={17} /></button></div><div className="drawer-property-list"><div><span>Status</span><select value={task.status} onChange={(event) => onStatus(event.target.value as TaskStatus)} aria-label="Task status"><option>Todo</option><option>In progress</option><option>In review</option><option>Done</option></select></div><div><span>Priority</span><strong className={`dashboard-priority priority-${priorityTone[task.priority]}`}><Flag size={12} /> {task.priority}</strong></div><div><span>Assignee</span><strong><Avatar initials={task.initials} tone={task.initials === "OP" ? "sand" : task.initials === "AM" ? "rose" : "blue"} small /> {task.assignee}</strong></div><div><span>Due date</span><strong><CalendarDays size={14} /> {task.due}</strong></div><div><span>Label</span><strong className="drawer-label-tag">{task.label}</strong></div></div><div className="drawer-description"><span className="dashboard-panel-kicker">DESCRIPTION</span><p>Keep this piece of work moving with clear ownership, a visible next step, and enough context for the team to make progress without another meeting.</p></div><div className="drawer-activity"><span className="dashboard-panel-kicker">LATEST ACTIVITY</span><div><Avatar initials={task.initials} tone={task.initials === "OP" ? "sand" : "rose"} small /><p><strong>{task.assignee}</strong> updated this task <span>Today</span></p></div></div></aside></div>;
+  const drawerRef = useRef<HTMLElement>(null);
+  const backdropRef = useRef<HTMLDivElement>(null);
+  useGSAP(() => {
+    const media = gsap.matchMedia();
+    media.add("(prefers-reduced-motion: no-preference)", () => {
+      gsap.fromTo(backdropRef.current, { autoAlpha: 0 }, { autoAlpha: 1, duration: 0.18, ease: "power1.out" });
+      gsap.fromTo(drawerRef.current, { autoAlpha: 0, x: 22 }, { autoAlpha: 1, x: 0, duration: 0.28, ease: "power3.out" });
+    });
+    return () => media.revert();
+  }, { scope: backdropRef, dependencies: [task.id], revertOnUpdate: true });
+  return <div ref={backdropRef} className="dashboard-drawer-backdrop" role="presentation" onMouseDown={(event) => { if (event.target === event.currentTarget) onClose(); }}><aside ref={drawerRef} className="dashboard-task-drawer" role="dialog" aria-modal="true" aria-label={`Task details: ${task.title}`}><div className="drawer-topline"><span>{task.id}</span><button type="button" onClick={onClose} aria-label="Close task details"><X size={18} /></button></div><div className="drawer-title-wrap"><span className="dashboard-panel-kicker">TASK DETAILS</span><h2>{task.title}</h2><span className="drawer-project-label"><FolderKanban size={13} /> {task.project}</span></div><div className="drawer-actions"><button type="button" className="dashboard-secondary-button" onClick={onToggle}>{task.status === "Done" ? <Circle size={14} /> : <Check size={14} />}{task.status === "Done" ? "Reopen task" : "Mark complete"}</button><button type="button" className="dashboard-kebab" aria-label="More task options"><MoreHorizontal size={17} /></button></div><div className="drawer-property-list"><div><span>Status</span><select value={task.status} onChange={(event) => onStatus(event.target.value as TaskStatus)} aria-label="Task status"><option>Todo</option><option>In progress</option><option>In review</option><option>Done</option></select></div><div><span>Priority</span><strong className={`dashboard-priority priority-${priorityTone[task.priority]}`}><Flag size={12} /> {task.priority}</strong></div><div><span>Assignee</span><strong><Avatar initials={task.initials} tone={task.initials === "OP" ? "sand" : task.initials === "AM" ? "rose" : "blue"} small /> {task.assignee}</strong></div><div><span>Due date</span><strong><CalendarDays size={14} /> {task.due}</strong></div><div><span>Label</span><strong className="drawer-label-tag">{task.label}</strong></div></div><div className="drawer-description"><span className="dashboard-panel-kicker">DESCRIPTION</span><p>Keep this piece of work moving with clear ownership, a visible next step, and enough context for the team to make progress without another meeting.</p></div><div className="drawer-activity"><span className="dashboard-panel-kicker">LATEST ACTIVITY</span><div><Avatar initials={task.initials} tone={task.initials === "OP" ? "sand" : "rose"} small /><p><strong>{task.assignee}</strong> updated this task <span>Today</span></p></div></div></aside></div>;
 }
 
 function NewTaskModal({ onClose, onSubmit }: { onClose: () => void; onSubmit: (event: FormEvent<HTMLFormElement>) => void }) {
-  return <div className="dashboard-modal-backdrop" role="presentation" onMouseDown={(event) => { if (event.target === event.currentTarget) onClose(); }}><section className="dashboard-new-task-modal" role="dialog" aria-modal="true" aria-labelledby="new-task-title"><div className="new-task-modal-heading"><div><span className="dashboard-panel-kicker">MAKE IT MOVE</span><h2 id="new-task-title">Create a task</h2><p>Start with the next clear step.</p></div><button type="button" onClick={onClose} aria-label="Close new task dialog"><X size={18} /></button></div><form onSubmit={onSubmit}><label className="new-task-title-field"><span>Task name</span><input name="title" autoFocus placeholder="What needs to get done?" required maxLength={100} /></label><div className="new-task-form-grid"><label><span>Project</span><select name="project"><option>Product experience</option><option>Brand refresh</option><option>Client portal</option><option>Launch planning</option><option>Mobile companion</option></select></label><label><span>Priority</span><select name="priority"><option>Medium</option><option>Urgent</option><option>High</option><option>Low</option></select></label><label><span>Due date</span><select name="due"><option>Nov 11</option><option>Nov 12</option><option>Nov 13</option><option>Nov 16</option><option>Nov 18</option><option>Nov 20</option></select></label></div><div className="new-task-modal-footer"><span><kbd>ESC</kbd> to cancel</span><div><button type="button" className="dashboard-secondary-button" onClick={onClose}>Cancel</button><button type="submit" className="dashboard-primary-button"><Plus size={15} /> Create task</button></div></div></form></section></div>;
+  const modalRef = useRef<HTMLElement>(null);
+  const backdropRef = useRef<HTMLDivElement>(null);
+  useGSAP(() => {
+    const media = gsap.matchMedia();
+    media.add("(prefers-reduced-motion: no-preference)", () => {
+      gsap.fromTo(backdropRef.current, { autoAlpha: 0 }, { autoAlpha: 1, duration: 0.16, ease: "power1.out" });
+      gsap.fromTo(modalRef.current, { autoAlpha: 0, y: 12, scale: 0.99 }, { autoAlpha: 1, y: 0, scale: 1, duration: 0.26, ease: "power3.out" });
+    });
+    return () => media.revert();
+  }, { scope: backdropRef, revertOnUpdate: true });
+  return <div ref={backdropRef} className="dashboard-modal-backdrop" role="presentation" onMouseDown={(event) => { if (event.target === event.currentTarget) onClose(); }}><section ref={modalRef} className="dashboard-new-task-modal" role="dialog" aria-modal="true" aria-labelledby="new-task-title"><div className="new-task-modal-heading"><div><span className="dashboard-panel-kicker">MAKE IT MOVE</span><h2 id="new-task-title">Create a task</h2><p>Start with the next clear step.</p></div><button type="button" onClick={onClose} aria-label="Close new task dialog"><X size={18} /></button></div><form onSubmit={onSubmit}><label className="new-task-title-field"><span>Task name</span><input name="title" autoFocus placeholder="What needs to get done?" required maxLength={100} /></label><div className="new-task-form-grid"><label><span>Project</span><select name="project"><option>Product experience</option><option>Brand refresh</option><option>Client portal</option><option>Launch planning</option><option>Mobile companion</option></select></label><label><span>Priority</span><select name="priority"><option>Medium</option><option>Urgent</option><option>High</option><option>Low</option></select></label><label><span>Due date</span><select name="due"><option>Nov 11</option><option>Nov 12</option><option>Nov 13</option><option>Nov 16</option><option>Nov 18</option><option>Nov 20</option></select></label></div><div className="new-task-modal-footer"><span><kbd>ESC</kbd> to cancel</span><div><button type="button" className="dashboard-secondary-button" onClick={onClose}>Cancel</button><button type="submit" className="dashboard-primary-button"><Plus size={15} /> Create task</button></div></div></form></section></div>;
 }
 
 function EmptyState({ title, copy }: { title: string; copy: string }) {

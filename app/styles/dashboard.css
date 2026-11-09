@@ -1,7 +1,7 @@
 /* Dashboard-specific analytics layer. Imported after globals.css; layer order is declared centrally. */
 @layer morrow.dashboard {
 /* --------------------------------------------------------------------------
-   Morrow workspace analytics — Linear-inspired, not a replica.
+   Morrow workspace analytics â€” Linear-inspired, not a replica.
    Data visualizations are the primary surface; panels stay quiet and legible.
    -------------------------------------------------------------------------- */
 
@@ -681,4 +681,3 @@
 }
 
 }
-

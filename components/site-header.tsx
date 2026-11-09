@@ -1,6 +1,8 @@
 "use client";
 
 import { useEffect, useMemo, useRef, useState, type KeyboardEvent as ReactKeyboardEvent } from "react";
+import { useGSAP } from "@gsap/react";
+import gsap from "gsap";
 import Link from "next/link";
 import { GlassButton, GlassMenu, GlassNav } from "@zakisheriff/liquid-glass";
 import { usePathname, useRouter } from "next/navigation";
@@ -23,6 +25,8 @@ import {
   type LucideIcon,
 } from "lucide-react";
 import { SignupModal } from "./signup-modal";
+
+gsap.registerPlugin(useGSAP);
 
 type CommandItem = {
   label: string;
@@ -226,7 +230,37 @@ export function CommandPalette({ open, onClose }: { open: boolean; onClose: () =
   const [query, setQuery] = useState("");
   const [activeIndex, setActiveIndex] = useState(0);
   const inputRef = useRef<HTMLInputElement>(null);
+  const backdropRef = useRef<HTMLDivElement>(null);
   const previouslyFocused = useRef<HTMLElement | null>(null);
+
+  useGSAP(() => {
+    if (!open) return;
+
+    const media = gsap.matchMedia();
+    media.add("(prefers-reduced-motion: no-preference)", () => {
+      gsap.fromTo(".command-backdrop", { autoAlpha: 0 }, {
+        autoAlpha: 1,
+        duration: 0.16,
+        ease: "power1.out",
+      });
+      gsap.fromTo(".command-dialog", { autoAlpha: 0, y: 12, scale: 0.99 }, {
+        autoAlpha: 1,
+        y: 0,
+        scale: 1,
+        duration: 0.28,
+        ease: "power3.out",
+      });
+      gsap.fromTo(".command-result", { autoAlpha: 0, y: 5 }, {
+        autoAlpha: 1,
+        y: 0,
+        duration: 0.2,
+        stagger: 0.025,
+        delay: 0.08,
+        ease: "power2.out",
+      });
+    });
+    return () => media.revert();
+  }, { scope: backdropRef, dependencies: [open], revertOnUpdate: true });
 
   const filteredCommands = useMemo(
     () => commands.filter((item) => `${item.label} ${item.detail}`.toLowerCase().includes(query.toLowerCase().trim())),
@@ -284,7 +318,7 @@ export function CommandPalette({ open, onClose }: { open: boolean; onClose: () =
   const activeCommandId = filteredCommands[activeIndex] ? `morrow-command-${activeIndex}` : undefined;
 
   return (
-    <div className="command-backdrop" role="presentation" onMouseDown={(event) => { if (event.target === event.currentTarget) onClose(); }}>
+    <div ref={backdropRef} className="command-backdrop" role="presentation" onMouseDown={(event) => { if (event.target === event.currentTarget) onClose(); }}>
       <section className="command-dialog" role="dialog" aria-modal="true" aria-label="Quick navigation">
         <div className="command-search-row">
           <Search size={18} aria-hidden="true" />

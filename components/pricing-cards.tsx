@@ -1,11 +1,33 @@
 "use client";
 
-import { useState } from "react";
+import { useRef, useState } from "react";
+import { useGSAP } from "@gsap/react";
+import gsap from "gsap";
 import { ArrowRight, Check, Sparkles } from "lucide-react";
 import { SignupTrigger } from "./signup-trigger";
 
+gsap.registerPlugin(useGSAP);
+
 export function PricingCards() {
   const [annual, setAnnual] = useState(true);
+  const gridRef = useRef<HTMLDivElement>(null);
+  const previousBilling = useRef(annual);
+  useGSAP(() => {
+    if (previousBilling.current === annual) return;
+    previousBilling.current = annual;
+
+    const media = gsap.matchMedia();
+    media.add("(prefers-reduced-motion: no-preference)", () => {
+      gsap.fromTo(".price-number strong, .price-billing-note", { autoAlpha: 0, y: 6 }, {
+        autoAlpha: 1,
+        y: 0,
+        duration: 0.22,
+        stagger: 0.025,
+        ease: "power2.out",
+      });
+    });
+    return () => media.revert();
+  }, { scope: gridRef, dependencies: [annual], revertOnUpdate: true });
   const plans = [
     { name: "Starter", description: "A little more clarity for your day.", monthly: 0, annual: 0, features: ["Up to 3 projects", "Unlimited personal tasks", "Basic team updates", "7-day activity history"], featured: false },
     { name: "Team", description: "Everything your team needs to move.", monthly: 12, annual: 9, features: ["Unlimited projects & tasks", "Shared goals and timelines", "Team insights & reports", "AI-powered weekly summaries", "Priority support"], featured: true },
@@ -14,7 +36,7 @@ export function PricingCards() {
   return (
     <>
       <div className="pricing-toggle-wrap"><span className={!annual ? "toggle-label-active" : ""}>Monthly</span><button className={`billing-toggle ${annual ? "is-annual" : ""}`} onClick={() => setAnnual((value) => !value)} aria-label="Toggle annual billing" aria-pressed={annual}><i /></button><span className={annual ? "toggle-label-active" : ""}>Yearly <em>Save up to 25%</em></span></div>
-      <div className="pricing-grid">{plans.map((plan) => <article key={plan.name} className={`price-card ${plan.featured ? "price-featured" : ""}`}>
+      <div className="pricing-grid" ref={gridRef}>{plans.map((plan) => <article key={plan.name} className={`price-card ${plan.featured ? "price-featured" : ""}`}>
         {plan.featured && <div className="popular-badge"><Sparkles size={12} /> THE SWEET SPOT</div>}
         <div className="price-card-top"><h3>{plan.name}</h3><p>{plan.description}</p></div>
         <div className="price-number"><strong>{plan.monthly === 0 ? "$0" : `$${annual ? plan.annual : plan.monthly}`}</strong>{plan.monthly !== 0 && <span>/ member / month</span>}</div>

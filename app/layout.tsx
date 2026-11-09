@@ -1,9 +1,9 @@
 import type { Metadata } from "next";
 import type { ReactNode } from "react";
 import "./globals.css";
-import "./dashboard-visuals.css";
 import { LiquidGlassFilter } from "@zakisheriff/liquid-glass";
 import { RouteScrollReset } from "@/components/route-scroll-reset";
+import { PageMotion } from "@/components/page-motion";
 
 export const metadata: Metadata = {
   title: { default: "Morrow — Make room for your best work", template: "%s | Morrow" },
@@ -30,6 +30,7 @@ export default function RootLayout({ children }: Readonly<{ children: ReactNode 
       <body className="morrow-professional">
         <LiquidGlassFilter>
           <RouteScrollReset />
+          <PageMotion />
           {children}
         </LiquidGlassFilter>
       </body>

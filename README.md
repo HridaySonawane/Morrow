@@ -2,7 +2,7 @@
 
 Morrow is a multi-page SaaS marketing website and interactive product preview created for the Frontend Development Assignment. It translates the design lessons from Linear, Raycast, and Framer into an original product identity rather than copying any one reference.
 
-The detailed design and application structure is documented in [`MORROW_DESIGN_AND_APP_STRUCTURE.md`](./MORROW_DESIGN_AND_APP_STRUCTURE.md).
+See [`docs/architecture.md`](./docs/architecture.md) for the route and source layout.
 
 ## Product concept
 
@@ -47,7 +47,8 @@ Bricolage Grotesque and Azeret Mono are served by Google Fonts. Switzer and Sent
 - Tailwind CSS v4 (custom CSS design tokens and layout styling)
 - Lucide React icons
 - `@zakisheriff/liquid-glass` (MIT) for the native `GlassNav`, `GlassMenu`, `GlassButton`, and shared `LiquidGlassFilter` components
-- CSS transitions, keyframe animations, and Intersection Observer scroll reveals
+- GSAP and ScrollTrigger for route entrances, scroll reveals, dashboard view changes, and interactive overlays
+- CSS transitions for small control and hover feedback
 
 No backend or database is required. The product preview uses local React state and sample data, as permitted by the assignment.
 
@@ -106,39 +107,20 @@ The information design takes inspiration from Linear's Insights and Dashboards p
 - Workflow section has three interactive tabs.
 - Pricing section toggles monthly and annual billing prices. The annual offer uses an accurate “Save up to 25%” claim based on the listed plan prices.
 - Get-started actions open an early-access dialog with client-side validation, a success state, Escape handling, focus management, and a focus trap.
-- Sections and cards reveal once as they enter the viewport. They remain visible when scrolling back up, and reduced-motion preferences are respected.
+- GSAP animates route entrances, section and card reveals, dashboard view changes, workspace preview updates, pricing changes, and dialogs. Scroll reveals run once, and the system respects reduced-motion preferences.
 - Hover, focus, keyboard, and reduced-motion states are included.
 
 ## Project structure
 
 ```text
-app/
-  globals.css              Consolidated palette tokens, foundation, marketing, brand, and motion layers
-  dashboard-visuals.css    Dashboard-specific chart and analytics presentation
-  layout.tsx               Root layout and shared metadata
-  page.tsx                 Home / brand introduction
-  product/page.tsx         Product overview and workspace preview
-  how-it-works/page.tsx    Interactive workflow explainer
-  teams/page.tsx           Team use cases
-  pricing/page.tsx         Plans and FAQs
-  about/page.tsx           Brand story and principles
-  dashboard/page.tsx       Interactive workspace dashboard
-components/
-  marketing-shell.tsx      Shared shell for each route
-  page-intro.tsx           Reusable interior-page hero
-  site-header.tsx          Multi-page navigation, theme, command palette
-  site-footer.tsx          Shared route-aware footer
-  product-preview.tsx      Interactive three-pane workspace mockup
-  hero-command.tsx         Keyboard-first hero search launcher
-  pricing-cards.tsx        Billing toggle and plan cards
-  signup-modal.tsx         Accessible early-access dialog
-  signup-trigger.tsx       Reusable signup dialog trigger
-  scroll-effects.tsx       One-shot, reduced-motion-aware reveal effects
-  workflow-switcher.tsx    Interactive three-step workflow section
-  dashboard-app.tsx        Workspace shell, task flows, projects, inbox, calendar, reports
-public/
-  (the app icon is defined in app/icon.svg)
+app/             App Router pages and global stylesheet entry point
+app/styles/      CSS tokens and styles grouped by responsibility
+components/      Shared marketing UI and the interactive workspace
+public/          Static assets
+docs/            Project architecture notes
 ```
+
+`docs/architecture.md` describes the route layout, shared shells, styling layers, and frontend-only scope.
 
 ## Design decisions
 
@@ -151,10 +133,6 @@ public/
 - The command palette preserves a Raycast-inspired keyboard-first interaction, but visual storytelling is restrained and centred on the product itself.
 - Server-rendered page content is kept in route components; client components are isolated to interactions that need browser state.
 - Responsive layouts are tuned for desktop, tablet, and mobile; at narrow widths the product preview prioritizes the issue list and hides secondary navigation/details panels rather than squeezing the three-pane interface into unreadable columns.
-
-## AI usage note
-
-AI assistance was used to help develop the component structure, copy, styling, and interaction implementation. The source is organized into small components so the implementation can be reviewed, explained, and modified. All product copy, sample data, and UI behavior are illustrative; the website does not connect to a real service.
 
 ## Before submission
 
