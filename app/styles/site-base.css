@@ -2186,16 +2186,22 @@
   .command-backdrop {
     position: fixed;
     inset: 0;
-    z-index: 100;
-    padding: 20px;
+    z-index: 1000;
+    padding: max(12px, env(safe-area-inset-top)) max(12px, env(safe-area-inset-right)) max(12px, env(safe-area-inset-bottom)) max(12px, env(safe-area-inset-left));
     display: grid;
     place-items: center;
+    overflow-y: auto;
     background: rgba(3, 6, 3, 0.67);
     backdrop-filter: blur(9px);
     animation: fadeIn 0.18s ease both;
   }
   .signup-modal {
     width: min(440px, 100%);
+    max-height: calc(100vh - 40px);
+    max-height: calc(100dvh - 40px);
+    overflow-y: auto;
+    overscroll-behavior: contain;
+    -webkit-overflow-scrolling: touch;
     position: relative;
     padding: 37px;
     border: 1px solid var(--line-strong);

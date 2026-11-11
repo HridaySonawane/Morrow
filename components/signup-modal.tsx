@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState, type FormEvent } from "react";
+import { createPortal } from "react-dom";
 import { useGSAP } from "@gsap/react";
 import gsap from "gsap";
 import { ArrowRight, Check, Sparkles, X } from "lucide-react";
@@ -97,8 +98,8 @@ export function SignupModal({ open, onClose }: { open: boolean; onClose: () => v
     if (email.trim()) setSubmitted(true);
   }
 
-  return (
-    <div ref={backdropRef} className="modal-backdrop" onMouseDown={(event) => { if (event.target === event.currentTarget) onClose(); }}>
+  return createPortal(
+    <div ref={backdropRef} className="modal-backdrop morrow-professional-modal" onMouseDown={(event) => { if (event.target === event.currentTarget) onClose(); }}>
       <section ref={dialogRef} className="signup-modal" role="dialog" aria-modal="true" aria-labelledby="signup-heading" tabIndex={-1}>
         <button className="modal-close icon-button" type="button" onClick={onClose} aria-label="Close dialog"><X size={18} /></button>
         <div className="modal-symbol"><Sparkles size={21} /></div>
@@ -124,6 +125,7 @@ export function SignupModal({ open, onClose }: { open: boolean; onClose: () => v
           </>
         )}
       </section>
-    </div>
+    </div>,
+    document.body,
   );
 }

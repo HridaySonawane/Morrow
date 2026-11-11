@@ -662,6 +662,11 @@
   }
 }
 @layer morrow.brand {
+  .morrow-professional-modal,
+  .morrow-professional-modal .signup-modal {
+    animation: none;
+  }
+
   .morrow-professional .modal-backdrop,
   .morrow-professional .command-backdrop,
   .morrow-professional .signup-modal,
