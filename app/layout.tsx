@@ -6,18 +6,32 @@ import { RouteScrollReset } from "@/components/route-scroll-reset";
 import { PageMotion } from "@/components/page-motion";
 
 export const metadata: Metadata = {
-  title: { default: "Morrow — Make room for your best work", template: "%s | Morrow" },
-  description: "A thoughtful workspace for teams who want to move good work forward.",
+  title: {
+    default: "Morrow — Make room for your best work",
+    template: "%s | Morrow",
+  },
+  description:
+    "A thoughtful workspace for teams who want to move good work forward.",
 };
 
-export default function RootLayout({ children }: Readonly<{ children: ReactNode }>) {
+export default function RootLayout({
+  children,
+}: Readonly<{ children: ReactNode }>) {
   return (
     <html lang="en" data-theme="dark">
       <head>
         <link rel="preconnect" href="https://fonts.googleapis.com" />
-        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
+        <link
+          rel="preconnect"
+          href="https://fonts.gstatic.com"
+          crossOrigin="anonymous"
+        />
         <link rel="preconnect" href="https://api.fontshare.com" />
-        <link rel="preconnect" href="https://cdn.fontshare.com" crossOrigin="anonymous" />
+        <link
+          rel="preconnect"
+          href="https://cdn.fontshare.com"
+          crossOrigin="anonymous"
+        />
         <link
           href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@400;500;600;700;800&family=Azeret+Mono:wght@400;500;600&display=swap"
           rel="stylesheet"

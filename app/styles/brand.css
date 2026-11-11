@@ -137,7 +137,7 @@
 .morrow-professional .closing-section,
 .morrow-professional .product-cta-band,
 .morrow-professional .about-bottom-cta {
-  background: var(--surface-raised);
+  background: var(--bg-soft);
   color: var(--text);
 }
 
@@ -671,5 +671,49 @@
   .morrow-professional .dashboard-toast,
   .morrow-professional .preview-toast {
     animation: none;
+  }
+}
+
+@layer morrow.brand {
+  .morrow-professional .team-coverage-panel {
+    border-color: var(--line);
+    border-radius: 10px;
+    background: color-mix(in srgb, var(--surface) 46%, var(--bg));
+  }
+
+  .morrow-professional .about-bottom-cta h2 {
+    color: var(--text);
+  }
+
+  .morrow-professional .about-bottom-cta h2 span {
+    color: var(--accent);
+  }
+
+  .morrow-professional .about-bottom-cta .eyebrow {
+    color: var(--muted);
+  }
+
+  .morrow-professional .about-bottom-cta .button-light {
+    border-color: var(--accent);
+    background: var(--accent);
+    color: var(--accent-ink);
+  }
+
+  .morrow-professional .about-bottom-cta .button-light:hover {
+    border-color: color-mix(in srgb, var(--accent) 88%, var(--text));
+    background: color-mix(in srgb, var(--accent) 88%, var(--text));
+  }
+
+  @media (max-width: 560px) {
+    .morrow-professional .about-hero-rule .page-container {
+      justify-content: space-between;
+      gap: clamp(5px, 2vw, 10px);
+      font-size: clamp(7px, 2vw, 9px);
+      letter-spacing: .08em;
+    }
+
+    .morrow-professional .about-hero-rule i {
+      flex: 0 0 3px;
+    }
   }
 }

@@ -5,6 +5,277 @@
    Data visualizations are the primary surface; panels stay quiet and legible.
    -------------------------------------------------------------------------- */
 
+.morrow-professional .dashboard-daybook {
+  display: grid;
+  grid-template-columns: 56px minmax(0, 1fr) minmax(290px, .78fr);
+  gap: clamp(20px, 2.8vw, 40px);
+  align-items: stretch;
+  margin: 0 0 22px;
+  padding: 20px 0 24px;
+  border-block: 1px solid var(--dash-line-strong);
+  background: radial-gradient(ellipse at 68% 40%, var(--dash-purple-soft), transparent 46%);
+}
+
+  @media (min-width: 821px) {
+    .morrow-professional .dashboard-app.is-sidebar-collapsed {
+      grid-template-columns: 76px minmax(0, 1fr);
+    }
+
+    .morrow-professional .dashboard-app.is-sidebar-collapsed .dashboard-sidebar {
+      box-sizing: border-box;
+      width: 76px;
+      min-width: 76px;
+      padding: 20px 10px 14px;
+      overflow: hidden;
+    }
+
+    .morrow-professional .dashboard-app.is-sidebar-collapsed .dashboard-brand > span:not(.dashboard-brand-mark),
+    .morrow-professional .dashboard-app.is-sidebar-collapsed .dashboard-workspace-copy,
+    .morrow-professional .dashboard-app.is-sidebar-collapsed .dashboard-workspace-switch > svg,
+    .morrow-professional .dashboard-app.is-sidebar-collapsed .dashboard-sidebar-search > span,
+    .morrow-professional .dashboard-app.is-sidebar-collapsed .dashboard-sidebar-search kbd,
+    .morrow-professional .dashboard-app.is-sidebar-collapsed .dashboard-nav-label,
+    .morrow-professional .dashboard-app.is-sidebar-collapsed .dashboard-nav-item > span,
+    .morrow-professional .dashboard-app.is-sidebar-collapsed .dashboard-team-link > span:not(.team-dot),
+    .morrow-professional .dashboard-app.is-sidebar-collapsed .dashboard-team-link > svg,
+    .morrow-professional .dashboard-app.is-sidebar-collapsed .dashboard-upgrade-card,
+    .morrow-professional .dashboard-app.is-sidebar-collapsed .dashboard-user-profile > span:nth-child(2),
+    .morrow-professional .dashboard-app.is-sidebar-collapsed .dashboard-user-profile > button {
+      display: none;
+    }
+
+    .morrow-professional .dashboard-app.is-sidebar-collapsed .dashboard-workspace-switch,
+    .morrow-professional .dashboard-app.is-sidebar-collapsed .dashboard-sidebar-search {
+      box-sizing: border-box;
+      display: grid;
+      width: 40px;
+      height: 40px;
+      min-width: 40px;
+      min-height: 40px;
+      max-width: 40px;
+      max-height: 40px;
+      flex: 0 0 40px;
+      align-self: center;
+      place-items: center;
+      gap: 0;
+      padding: 0;
+      overflow: hidden;
+    }
+
+    .morrow-professional .dashboard-app.is-sidebar-collapsed .dashboard-workspace-switch {
+      margin-top: 0;
+      border-radius: 10px;
+    }
+
+    .morrow-professional .dashboard-app.is-sidebar-collapsed .dashboard-sidebar-search {
+      margin-top: 13px;
+      border-radius: 9px;
+    }
+
+    .morrow-professional .dashboard-app.is-sidebar-collapsed .dashboard-nav-label-row {
+      justify-content: center;
+      margin-inline: 0;
+    }
+
+    .morrow-professional .dashboard-app.is-sidebar-collapsed .dashboard-nav-label-row button,
+    .morrow-professional .dashboard-app.is-sidebar-collapsed .dashboard-nav-item,
+    .morrow-professional .dashboard-app.is-sidebar-collapsed .dashboard-team-link {
+      width: 40px;
+      margin-inline: auto;
+      padding-inline: 0;
+      justify-content: center;
+    }
+  }
+.morrow-professional .dashboard-sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+
+.morrow-professional .dashboard-scramble-text {
+  position: relative;
+  display: inline-flex;
+  align-items: baseline;
+  white-space: pre;
+}
+
+.morrow-professional .dashboard-scramble-char {
+  display: inline-block;
+  min-width: .15em;
+  text-align: center;
+  transition: color .15s ease, opacity .15s ease, filter .2s ease, text-shadow .15s ease;
+}
+
+.morrow-professional .dashboard-scramble-char.is-scrambling {
+  color: var(--muted-2);
+  opacity: .55;
+  filter: blur(.5px);
+}
+
+.morrow-professional .dashboard-scramble-char.is-settling {
+  color: var(--dash-purple);
+  opacity: .78;
+  filter: blur(.25px);
+}
+
+.morrow-professional .dashboard-scramble-char.is-resolved {
+  color: var(--dash-purple);
+  opacity: 1;
+  filter: none;
+}
+
+.morrow-professional .dashboard-scramble-char.is-glow-flash {
+  text-shadow: 0 0 12px var(--dash-purple), 0 0 24px color-mix(in srgb, var(--dash-purple) 48%, transparent);
+}
+
+.morrow-professional .dashboard-scramble-char.is-glow-steady {
+  text-shadow: 0 0 7px color-mix(in srgb, var(--dash-purple) 48%, transparent);
+}
+
+.morrow-professional .dashboard-daybook-date {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: center;
+  border-right: 1px solid var(--dash-line-strong);
+  color: var(--muted-2);
+  font-family: var(--font-mono);
+}
+
+.morrow-professional .dashboard-daybook-date > span,
+.morrow-professional .dashboard-daybook-date > small {
+  font-size: 8px;
+  letter-spacing: .12em;
+}
+
+.morrow-professional .dashboard-daybook-date > strong {
+  margin: 2px 0;
+  color: var(--dash-purple);
+  font-family: var(--font-display);
+  font-size: 36px;
+  font-weight: 580;
+  letter-spacing: -.08em;
+  line-height: 1;
+}
+
+.morrow-professional .dashboard-daybook-copy { min-width: 0; }
+
+.morrow-professional .dashboard-daybook-topline {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 14px;
+  margin-bottom: 14px;
+}
+
+.morrow-professional .dashboard-daybook .dashboard-eyebrow { margin: 0; }
+
+.morrow-professional .dashboard-daybook .dashboard-primary-button {
+  min-height: 33px;
+  padding-inline: 10px;
+  font-size: 9px;
+}
+
+.morrow-professional .dashboard-daybook h1 {
+  margin: 0;
+  color: var(--text);
+  font-family: var(--font-display);
+  font-size: clamp(39px, 4.4vw, 58px);
+  font-weight: 580;
+  letter-spacing: -.075em;
+  line-height: .98;
+}
+
+.morrow-professional .dashboard-daybook h1 em {
+  color: var(--dash-purple);
+  font-family: var(--font-editorial);
+  font-weight: 400;
+}
+
+.morrow-professional .dashboard-daybook-copy > p {
+  max-width: 470px;
+  margin: 12px 0 0;
+  color: var(--muted);
+  font-size: 12px;
+  line-height: 1.6;
+}
+
+.morrow-professional .dashboard-daybook-focus {
+  display: flex;
+  min-width: 0;
+  min-height: 154px;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: space-between;
+  padding: 17px 18px 15px;
+  border: 1px solid var(--dash-line-strong);
+  border-left: 2px solid var(--dash-purple);
+  border-radius: 9px;
+  background: radial-gradient(ellipse at 100% 0%, var(--dash-purple-soft), transparent 58%), var(--dash-panel);
+  color: var(--text);
+  text-align: left;
+}
+
+button.dashboard-daybook-focus { cursor: pointer; transition: border-color .18s ease, transform .18s ease; }
+button.dashboard-daybook-focus:hover { transform: translateY(-2px); border-color: color-mix(in srgb, var(--dash-purple) 44%, var(--dash-line-strong)); }
+
+.morrow-professional .daybook-focus-kicker,
+.morrow-professional .daybook-focus-bottom {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  color: var(--muted-2);
+  font-family: var(--font-mono);
+  font-size: 8px;
+  letter-spacing: .07em;
+}
+
+.morrow-professional .daybook-focus-kicker i {
+  width: 6px;
+  height: 6px;
+  flex: 0 0 auto;
+  border-radius: 50%;
+  background: var(--green);
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--green) 14%, transparent);
+}
+
+.morrow-professional .daybook-focus-kicker > span { color: var(--dash-line-strong); }
+
+.morrow-professional .dashboard-daybook-focus > strong {
+  display: -webkit-box;
+  width: 100%;
+  overflow: hidden;
+  color: var(--text);
+  font-family: var(--font-display);
+  font-size: 18px;
+  font-weight: 570;
+  letter-spacing: -.045em;
+  line-height: 1.25;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+}
+
+.morrow-professional .daybook-focus-bottom {
+  width: 100%;
+  justify-content: space-between;
+  padding-top: 11px;
+  border-top: 1px solid var(--dash-line);
+  font-family: var(--font-body);
+  font-size: 10px;
+  letter-spacing: 0;
+}
+
+.morrow-professional .daybook-focus-bottom > span:last-child {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  color: var(--dash-purple);
+}
+
 .morrow-professional .dashboard-kpi-strip {
   display: grid;
   grid-template-columns: repeat(4, minmax(0, 1fr));
@@ -12,6 +283,58 @@
   border-top: 1px solid var(--dash-line);
   border-bottom: 1px solid var(--dash-line);
 }
+
+.morrow-professional .dashboard-calendar-actions {
+  display: flex;
+  align-items: center;
+  gap: 11px;
+}
+
+.morrow-professional .dashboard-calendar-new-task {
+  min-height: 35px;
+  padding-inline: 12px;
+}
+
+.morrow-professional .calendar-day.is-selected {
+  background: color-mix(in srgb, var(--dash-purple-soft) 44%, transparent);
+}
+
+.morrow-professional .calendar-day-heading {
+  width: 100%;
+  border: 0;
+  background: transparent;
+  font: inherit;
+  cursor: pointer;
+  transition: background .16s ease, color .16s ease;
+}
+
+.morrow-professional .calendar-day-heading:hover {
+  background: var(--dash-purple-soft);
+}
+
+.morrow-professional .calendar-day.is-selected .calendar-day-heading strong {
+  outline: 1px solid color-mix(in srgb, var(--dash-purple) 48%, transparent);
+  outline-offset: 2px;
+}
+
+.morrow-professional .calendar-event {
+  display: block;
+  width: 100%;
+  border: 0;
+  border-left: 2px solid var(--dash-purple);
+  font-family: var(--font-body);
+  text-align: left;
+  cursor: pointer;
+  transition: filter .16s ease, transform .16s ease;
+}
+
+.morrow-professional .calendar-event:hover {
+  filter: brightness(1.18);
+  transform: translateY(-1px);
+}
+
+.morrow-professional .calendar-event.event-meeting { border-left-color: #d99cbe; }
+.morrow-professional .calendar-event.event-due { border-left-color: #dcb77f; }
 
 .morrow-professional .overview-metric {
   position: relative;
@@ -629,6 +952,11 @@
 }
 
 @media (max-width: 1020px) {
+  .morrow-professional .dashboard-daybook {
+    grid-template-columns: 48px minmax(0, 1fr);
+    gap: 17px 20px;
+  }
+  .morrow-professional .dashboard-daybook-focus { grid-column: 2; min-height: 126px; }
   .morrow-professional .dashboard-insight-grid,
   .morrow-professional .reports-insight-grid {
     grid-template-columns: minmax(0, 1fr);
@@ -644,6 +972,19 @@
 }
 
 @media (max-width: 700px) {
+  .morrow-professional .dashboard-calendar-actions { width: 100%; flex-wrap: wrap; justify-content: space-between; }
+  .morrow-professional .dashboard-calendar-actions .calendar-week-controls { width: auto; min-width: 0; flex: 1 1 220px; align-self: auto; justify-content: space-between; }
+  .morrow-professional .dashboard-daybook {
+    grid-template-columns: 40px minmax(0, 1fr);
+    gap: 16px 13px;
+    padding-block: 17px 20px;
+  }
+  .morrow-professional .dashboard-daybook-date > strong { font-size: 30px; }
+  .morrow-professional .dashboard-daybook-topline { flex-wrap: wrap; gap: 8px; margin-bottom: 12px; }
+  .morrow-professional .dashboard-daybook .dashboard-eyebrow { font-size: 7px; }
+  .morrow-professional .dashboard-daybook h1 { font-size: clamp(36px, 8vw, 48px); }
+  .morrow-professional .dashboard-daybook-copy > p { margin-top: 9px; font-size: 11px; }
+  .morrow-professional .dashboard-daybook-focus { grid-column: 1 / -1; min-height: 120px; }
   .morrow-professional .dashboard-kpi-strip { grid-template-columns: repeat(2, minmax(0, 1fr)); }
   .morrow-professional .overview-metric { padding: 13px 12px 13px 0; }
   .morrow-professional .overview-metric + .overview-metric { padding-left: 12px; }
