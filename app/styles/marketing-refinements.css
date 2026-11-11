@@ -204,10 +204,19 @@
     --lg-accent: var(--accent);
     min-width: 110px;
     font-size: 12px;
+    color: var(--accent-ink);
   }
 
   .morrow-professional .nav-theme-glass-button {
     --lg-accent: var(--accent);
+    --lg-glass-fill: var(--surface-raised);
+    border: 1px solid var(--line-strong);
+    color: var(--text);
+    box-shadow: 0 5px 16px color-mix(in srgb, var(--text) 9%, transparent);
+  }
+
+  .morrow-professional .nav-theme-glass-button:hover {
+    --lg-glass-fill: var(--surface-soft);
   }
 
   /* Home hero: copy first, real workspace second. No orbit, glow, fake ratings
@@ -769,34 +778,88 @@
   }
 
   .morrow-professional .pricing-grid {
-    gap: 14px;
+    align-items: stretch;
+    gap: 18px;
+    margin-top: 8px;
   }
 
   .morrow-professional .price-card {
+    position: relative;
+    display: flex;
+    min-width: 0;
     min-height: 0;
-    padding: 26px 24px 25px;
-    border: 1px solid var(--line-strong);
-    border-radius: 7px;
-    background: var(--surface);
-    box-shadow: none;
+    flex-direction: column;
+    padding: 27px 25px 24px;
+    border: 1px solid color-mix(in srgb, var(--line-strong) 76%, transparent);
+    border-radius: 12px;
+    background: linear-gradient(155deg, color-mix(in srgb, var(--surface-raised) 58%, var(--surface)), var(--surface) 55%);
+    box-shadow: 0 12px 32px rgba(0, 0, 0, 0.045);
+    transition: transform .24s cubic-bezier(.22,1,.36,1), border-color .2s ease, box-shadow .2s ease, background .2s ease;
+  }
+
+  .morrow-professional .price-card::before {
+    position: absolute;
+    inset: 0 0 auto;
+    height: 2px;
+    border-radius: inherit;
+    background: linear-gradient(90deg, transparent, color-mix(in srgb, var(--accent) 48%, transparent), transparent);
+    content: "";
+    opacity: .55;
+  }
+
+  .morrow-professional .price-card:hover {
+    transform: translateY(-4px);
+    border-color: color-mix(in srgb, var(--accent) 35%, var(--line-strong));
+    box-shadow: 0 18px 40px rgba(0, 0, 0, 0.09);
   }
 
   .morrow-professional .price-featured {
+    z-index: 1;
+    transform: translateY(-8px);
+    border-color: color-mix(in srgb, var(--accent) 78%, var(--line-strong));
+    background: radial-gradient(ellipse at 50% 0, color-mix(in srgb, var(--accent) 13%, transparent), transparent 55%), linear-gradient(155deg, color-mix(in srgb, var(--surface-raised) 76%, var(--surface)), var(--surface) 60%);
+    box-shadow: 0 22px 54px color-mix(in srgb, var(--accent) 13%, transparent), 0 0 0 1px color-mix(in srgb, var(--accent) 16%, transparent);
+  }
+
+  .morrow-professional .price-featured::before {
+    height: 3px;
+    background: linear-gradient(90deg, transparent, var(--accent), transparent);
+    opacity: .95;
+  }
+
+  .morrow-professional .price-featured:hover {
+    transform: translateY(-11px);
     border-color: var(--accent);
-    background: var(--surface);
-    box-shadow: 0 8px 24px rgba(31, 38, 30, 0.06);
+    box-shadow: 0 28px 62px color-mix(in srgb, var(--accent) 18%, transparent), 0 0 0 1px color-mix(in srgb, var(--accent) 22%, transparent);
+  }
+
+  .morrow-professional .price-card-top {
+    min-height: 101px;
+    padding-bottom: 17px;
+    border-bottom: 1px solid var(--line);
   }
 
   .morrow-professional .popular-badge {
-    top: 16px;
-    right: 16px;
-    border-radius: 3px;
-    padding: 5px 7px;
-    background: var(--accent-dim);
-    color: var(--accent);
+    top: -13px;
+    right: 20px;
+    border: 1px solid color-mix(in srgb, var(--accent) 44%, var(--line-strong));
+    border-radius: 999px;
+    padding: 6px 10px;
+    background: var(--surface-raised);
+    color: var(--text);
     font-family: var(--font-mono);
-    font-size: 9px;
-    letter-spacing: 0.02em;
+    font-size: 8px;
+    letter-spacing: .08em;
+    box-shadow: 0 5px 15px color-mix(in srgb, var(--accent) 14%, transparent);
+  }
+
+  .morrow-professional .popular-badge svg {
+    display: block;
+    color: var(--accent);
+  }
+
+  .morrow-professional .price-featured .price-number strong {
+    color: var(--accent);
   }
 
   .morrow-professional .popular-badge svg {
@@ -1844,9 +1907,9 @@
 
   /* About: use the editorial face with restraint, and remove orbital decoration. */
   .morrow-professional .about-hero {
-    padding: 93px 0 0;
-    background: #e9e8df;
-    color: #252a24;
+    padding: 72px 0 0;
+    background: var(--bg-soft);
+    color: var(--text);
   }
 
   .morrow-professional .about-hero::before,
@@ -1855,31 +1918,31 @@
   }
 
   .morrow-professional .about-hero-top {
-    border-color: rgba(37, 42, 36, 0.16);
-    color: #72796e;
+    border-color: var(--line-strong);
+    color: var(--muted);
   }
 
   .morrow-professional .about-hero-main {
-    min-height: 425px;
-    grid-template-columns: minmax(0, 1.2fr) minmax(230px, 0.55fr);
-    gap: 9%;
-    padding-top: 35px;
-    padding-bottom: 55px;
+    min-height: 350px;
+    grid-template-columns: minmax(0, 1.08fr) minmax(280px, 0.72fr);
+    gap: 5%;
+    padding-top: 30px;
+    padding-bottom: 34px;
   }
 
   .morrow-professional .about-hero-kicker {
-    color: #72796e;
+    color: var(--muted);
   }
 
   .morrow-professional .about-hero-kicker i {
     width: 18px;
     height: 1px;
     border-radius: 0;
-    background: #647b61;
+    background: var(--accent);
   }
 
   .morrow-professional .about-hero-title h1 {
-    color: #252a24;
+    color: var(--text);
     font-family: var(--font-display);
     font-size: clamp(61px, 8vw, 100px);
     font-weight: 600;
@@ -1888,7 +1951,7 @@
   }
 
   .morrow-professional .about-hero-title h1 em {
-    color: #647b61;
+    color: var(--accent);
     font-family: var(--font-editorial);
     font-weight: 400;
   }
@@ -1899,45 +1962,112 @@
     gap: 7px;
     margin-bottom: 25px;
     padding-bottom: 14px;
-    border-bottom: 1px solid rgba(37, 42, 36, 0.17);
-    color: #72796e;
+    border-bottom: 1px solid var(--line-strong);
+    color: var(--muted);
     font-family: var(--font-mono);
     font-size: 9px;
   }
 
   .morrow-professional .about-aside-index strong {
-    color: #647b61;
+    color: var(--accent);
     font-size: 22px;
     font-weight: 500;
   }
 
   .morrow-professional .about-hero-aside > p {
-    color: #636c62;
+    color: var(--text-soft);
     font-size: 15px;
     line-height: 1.75;
   }
 
+  .morrow-professional .about-hero-aside {
+    width: min(100%, 410px);
+    justify-self: end;
+  }
+
+  .morrow-professional .about-workflow-card {
+    padding: 18px 20px 10px;
+    border: 1px solid var(--line-strong);
+    border-radius: 14px;
+    background: var(--surface);
+    color: var(--text);
+    box-shadow: 0 16px 38px rgba(0, 0, 0, 0.12);
+  }
+
+  .morrow-professional .about-workflow-label {
+    display: block;
+    padding-bottom: 12px;
+    color: var(--muted);
+    font-family: var(--font-mono);
+    font-size: 9px;
+    letter-spacing: 0.12em;
+  }
+
+  .morrow-professional .about-workflow-row {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    min-height: 55px;
+    border-top: 1px solid var(--line);
+  }
+
+  .morrow-professional .about-workflow-row > i {
+    display: grid;
+    width: 25px;
+    height: 25px;
+    flex: 0 0 25px;
+    place-items: center;
+    border: 1px solid color-mix(in srgb, var(--accent) 38%, transparent);
+    border-radius: 50%;
+    background: var(--accent-dim);
+    color: var(--accent);
+    font-family: var(--font-mono);
+    font-size: 8px;
+    font-style: normal;
+  }
+
+  .morrow-professional .about-workflow-row > div {
+    display: grid;
+    gap: 1px;
+  }
+
+  .morrow-professional .about-workflow-row strong {
+    color: var(--text);
+    font-size: 13px;
+    font-weight: 620;
+  }
+
+  .morrow-professional .about-workflow-row small {
+    color: var(--text-soft);
+    font-size: 11px;
+  }
+
   .morrow-professional .about-hero-link {
-    color: #344534;
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+    margin: 13px 0 0 2px;
+    color: var(--text);
     font-size: 13px;
   }
 
   .morrow-professional .about-hero-rule {
-    border-color: rgba(37, 42, 36, 0.16);
-    background: rgba(255, 255, 255, 0.18);
+    border-color: var(--line);
+    background: var(--bg);
   }
 
   .morrow-professional .about-hero-rule .page-container {
-    color: #72796e;
+    color: var(--muted);
     font-size: 9px;
   }
 
   .morrow-professional .about-hero-rule i {
-    background: #647b61;
+    background: var(--accent);
   }
 
   .morrow-professional .about-manifesto-section {
     background: var(--bg);
+    padding-block: clamp(66px, 7vw, 88px);
   }
 
   .morrow-professional .about-manifesto-grid {
@@ -1980,7 +2110,7 @@
   .morrow-professional .about-manifesto-grid h2 {
     color: var(--text);
     font-family: var(--font-display);
-    font-size: clamp(36px, 4.4vw, 54px);
+    font-size: clamp(34px, 4vw, 48px);
     font-weight: 590;
     line-height: 1.05;
     letter-spacing: -0.055em;
@@ -2006,6 +2136,7 @@
     background: var(--bg-soft);
     color: var(--text);
     border-block: 1px solid var(--line);
+    padding-block: clamp(66px, 7vw, 88px);
   }
 
   .morrow-professional .about-principles-heading {
@@ -2022,14 +2153,16 @@
 
   .morrow-professional .principles-grid {
     grid-template-columns: repeat(3, minmax(0, 1fr));
-    border-color: var(--line-strong);
+    gap: 12px;
+    border: 0;
   }
 
   .morrow-professional .principle-card {
-    min-height: 205px;
-    padding: 24px;
-    border-color: var(--line);
-    background: transparent;
+    min-height: 190px;
+    padding: 21px 22px;
+    border: 1px solid var(--line);
+    border-radius: 9px;
+    background: color-mix(in srgb, var(--surface) 64%, transparent);
   }
 
   .morrow-professional .principle-card-top {
@@ -2042,7 +2175,7 @@
   }
 
   .morrow-professional .principle-card h3 {
-    margin-top: 38px;
+    margin-top: 28px;
     color: var(--text);
     font-family: var(--font-display);
     font-size: 19px;
@@ -2461,6 +2594,13 @@
     .morrow-professional .capability-grid {
       grid-template-columns: 1fr;
     }
+    .morrow-professional .price-featured,
+    .morrow-professional .price-featured:hover {
+      transform: none;
+    }
+    .morrow-professional .price-card:hover {
+      transform: translateY(-2px);
+    }
     .morrow-professional .team-card,
     .morrow-professional .team-card-2,
     .morrow-professional .team-card-3,
@@ -2490,8 +2630,17 @@
       font-size: clamp(54px, 12vw, 78px);
     }
     .morrow-professional .about-hero-aside {
-      max-width: 470px;
+      display: block;
+      width: min(100%, 470px);
+      max-width: 100%;
+      justify-self: stretch;
       padding-top: 12px;
+    }
+    .morrow-professional .about-workflow-card {
+      width: 100%;
+    }
+    .morrow-professional .about-hero-link {
+      grid-column: auto;
     }
     .morrow-professional .about-manifesto-stamp {
       margin-top: 0;

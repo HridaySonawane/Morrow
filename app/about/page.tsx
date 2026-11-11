@@ -1,12 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import {
-  ArrowDown,
-  ArrowRight,
-  Compass,
-  HeartHandshake,
-  Sparkles,
-} from "lucide-react";
+import { Activity, ArrowRight, Target, Workflow } from "lucide-react";
 import { MarketingShell } from "@/components/marketing-shell";
 
 export const metadata: Metadata = {
@@ -16,22 +10,22 @@ export const metadata: Metadata = {
 
 const principles = [
   {
-    icon: Compass,
+    icon: Target,
     number: "01",
-    title: "Clarity over noise",
-    copy: "Make the important things easy to find. Leave the rest quiet enough to ignore.",
+    title: "Make priorities visible",
+    copy: "See what matters now, who owns it, and what should happen next.",
   },
   {
-    icon: HeartHandshake,
+    icon: Workflow,
     number: "02",
-    title: "People before process",
-    copy: "Build tools around the people doing the work, not the other way around.",
+    title: "Keep decisions close",
+    copy: "Feedback and choices stay connected to the projects they shape.",
   },
   {
-    icon: Sparkles,
+    icon: Activity,
     number: "03",
-    title: "Progress with intention",
-    copy: "Create enough structure to move forward, and enough room to think differently.",
+    title: "Make progress shared",
+    copy: "Give everyone a clear view of momentum, handoffs, and blockers.",
   },
 ];
 
@@ -41,41 +35,48 @@ export default function AboutPage() {
       <main className="about-page">
         <section className="about-hero">
           <div className="page-container about-hero-top">
-            <span>OUR REASON FOR BEING</span>
-            <span>STORY / 01</span>
+            <span>ABOUT MORROW</span>
+            <span>THE IDEA / 01</span>
           </div>
           <div className="page-container about-hero-main">
             <div className="about-hero-title">
               <p className="about-hero-kicker">
-                <i /> WHY WE ARE BUILDING MORROW
+                <i /> A SHARED WORKSPACE FOR TEAMS
               </p>
               <h1>
-                Make space
+                Keep work
                 <br />
-                for <em>better work.</em>
+                in <em>context.</em>
               </h1>
             </div>
             <div className="about-hero-aside">
-              <div className="about-aside-index">
-                <span>OUR POINT OF VIEW</span>
-                <strong>01—03</strong>
+              <div className="about-workflow-card">
+                <span className="about-workflow-label">ONE SHARED VIEW</span>
+                <div className="about-workflow-row">
+                  <i>01</i>
+                  <div><strong>Priorities</strong><small>What matters now</small></div>
+                </div>
+                <div className="about-workflow-row">
+                  <i>02</i>
+                  <div><strong>Decisions</strong><small>Why the work is moving</small></div>
+                </div>
+                <div className="about-workflow-row">
+                  <i>03</i>
+                  <div><strong>Progress</strong><small>What happens next</small></div>
+                </div>
               </div>
-              <p>
-                We believe the best work happens when people have the clarity to
-                focus, the space to think, and the trust to move together.
-              </p>
               <Link className="about-hero-link" href="#our-belief">
-                Read what we believe <ArrowDown size={14} aria-hidden="true" />
+                Why we built Morrow <ArrowRight size={14} aria-hidden="true" />
               </Link>
             </div>
           </div>
           <div className="about-hero-rule">
             <div className="page-container">
-              <span>LESS NOISE</span>
+              <span>PROJECTS</span>
               <i />
-              <span>MORE MEANING</span>
+              <span>DECISIONS</span>
               <i />
-              <span>A LITTLE MORE ROOM</span>
+              <span>PROGRESS</span>
             </div>
           </div>
         </section>
@@ -86,31 +87,24 @@ export default function AboutPage() {
         >
           <div className="page-container about-manifesto-grid">
             <div className="about-manifesto-stamp">
-              <span>THE PRINCIPLE</span>
+              <span>WHY IT MATTERS</span>
               <strong>
-                Make the work
+                Less time
                 <br />
-                easier to see.
+                reconstructing.
               </strong>
             </div>
             <div>
-              <p className="eyebrow">THE IDEA IS SIMPLE / 02</p>
+              <p className="eyebrow">THE PROBLEM / 02</p>
               <h2>
-                We're not here to add more to your plate.
+                Work shouldn’t lose
                 <br />
-                <span>We're here to take things off it.</span>
+                <span>its context.</span>
               </h2>
               <p>
-                Somewhere along the way, work became keeping up with work.
-                Another tab. Another update. Another thing to remember. Morrow
-                is an invitation to make the important things clearer, keep the
-                right context close, and give people more energy for the work
-                itself.
-              </p>
-              <p>
-                We're building a calmer kind of workspace — one that respects
-                attention, makes collaboration feel natural, and gives teams a
-                better way to move forward together.
+                Projects, tasks, and decisions belong together. When people can
+                see what matters and why, handoffs get easier and progress is
+                easier to share.
               </p>
             </div>
           </div>
@@ -119,15 +113,15 @@ export default function AboutPage() {
         <section className="about-principles-section section-pad">
           <div className="page-container">
             <div className="about-principles-heading">
-              <p className="eyebrow">WHAT WE BELIEVE / 03</p>
+              <p className="eyebrow">HOW MORROW HELPS / 03</p>
               <h2>
-                A few principles
+                A clearer way
                 <br />
-                <span>we keep returning to.</span>
+                <span>to move work forward.</span>
               </h2>
               <p>
-                Not rules to follow. Principles to keep us pointed in the right
-                direction.
+                Keep priorities, decisions, and next steps visible in one
+                shared workspace.
               </p>
             </div>
             <div className="principles-grid">
@@ -150,14 +144,14 @@ export default function AboutPage() {
 
         <section className="about-bottom-cta">
           <div className="page-container">
-            <p className="eyebrow">MAKE SPACE FOR WHAT'S NEXT</p>
+            <p className="eyebrow">SEE THE WORKFLOW</p>
             <h2>
-              Here's to work
+              One place to
               <br />
-              <span>that moves us.</span>
+              <span>move work forward.</span>
             </h2>
             <Link className="button button-light" href="/how-it-works">
-              See how it works <ArrowRight size={15} />
+              See how Morrow works <ArrowRight size={15} />
             </Link>
           </div>
         </section>
