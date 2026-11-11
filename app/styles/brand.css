@@ -338,6 +338,35 @@
   color: var(--text);
 }
 
+:root[data-theme="light"] .morrow-professional .product-cta-inner h2 {
+  color: var(--text);
+}
+
+:root[data-theme="light"] .morrow-professional .product-cta-inner h2 span {
+  color: var(--accent);
+}
+
+:root[data-theme="light"]
+  .morrow-professional
+  .product-cta-inner > div:nth-child(2)
+  p {
+  color: var(--text-soft);
+}
+
+:root[data-theme="light"] .morrow-professional .closing-action .button-light {
+  border-color: var(--accent);
+  background: var(--accent);
+  color: var(--accent-ink);
+}
+
+:root[data-theme="light"]
+  .morrow-professional
+  .closing-action
+  .button-light:hover {
+  border-color: color-mix(in srgb, var(--accent) 88%, var(--text));
+  background: color-mix(in srgb, var(--accent) 88%, var(--text));
+}
+
 :root[data-theme="light"] .morrow-professional .dashboard-app {
   --dash-sidebar: var(--bg-soft);
   --dash-panel: var(--surface);

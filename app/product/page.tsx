@@ -97,21 +97,27 @@ export default function ProductPage() {
                 <span>01</span>
                 <div>
                   <strong>Plan the work</strong>
-                  <small>Goals, priorities and ownership.</small>
+                  <p>
+                    <small>Goals, priorities and ownership.</small>
+                  </p>
                 </div>
               </div>
               <div className="product-aside-row">
                 <span>02</span>
                 <div>
                   <strong>Keep it moving</strong>
-                  <small>Tasks, handoffs and decisions.</small>
+                  <p>
+                    <small>Tasks, handoffs and decisions.</small>
+                  </p>
                 </div>
               </div>
               <div className="product-aside-row">
                 <span>03</span>
                 <div>
                   <strong>Understand progress</strong>
-                  <small>Updates with the context attached.</small>
+                  <p>
+                    <small>Updates with the context attached.</small>
+                  </p>
                 </div>
               </div>
             </aside>

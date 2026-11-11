@@ -216,7 +216,13 @@
   }
 
   .morrow-professional .nav-theme-glass-button:hover {
-    --lg-glass-fill: var(--surface-soft);
+    --lg-fill-pressed: var(--lg-fill);
+    --lg-glass-fill: var(--lg-fill);
+    background-color: var(--bg) !important;
+  }
+
+  .morrow-professional .nav-theme-glass-button:focus-visible {
+    background-color: var(--bg) !important;
   }
 
   /* Home hero: copy first, real workspace second. No orbit, glow, fake ratings
@@ -1093,7 +1099,7 @@
     grid-row: span 2;
     color: var(--accent);
     font-family: var(--font-mono);
-    font-size: 10px;
+    font-size: 20px;
   }
 
   .morrow-professional .product-aside-row strong {
@@ -1211,6 +1217,11 @@
     border-radius: 0;
     background: transparent;
     box-shadow: none;
+    transition:
+      background 0.22s ease,
+      border-color 0.22s ease,
+      box-shadow 0.22s ease,
+      transform 0.22s ease;
   }
 
   .morrow-professional .capability-card:first-child {
@@ -1218,9 +1229,12 @@
   }
 
   .morrow-professional .capability-card:hover {
-    transform: none;
-    border-color: var(--line);
-    background: rgba(255, 255, 255, 0.32);
+    transform: translateY(-3px);
+    border-color: color-mix(in srgb, var(--accent) 32%, var(--line-strong));
+    background: var(--surface-raised);
+    box-shadow:
+      0 12px 28px rgba(0, 0, 0, 0.16),
+      inset 0 1px 0 color-mix(in srgb, var(--accent) 14%, transparent);
   }
 
   .morrow-professional .capability-icon {
@@ -2077,11 +2091,13 @@
   }
 
   .morrow-professional .about-manifesto-stamp {
+    width: min(100%, 240px);
     justify-self: start;
     align-items: flex-start;
     margin: 22px 0 0;
-    padding-top: 14px;
-    border-top: 1px solid var(--line-strong);
+    padding: 16px 18px 18px;
+    border: 1px solid var(--line-strong);
+    border-radius: 9px;
     gap: 0;
     letter-spacing: normal;
     text-align: left;
@@ -2101,7 +2117,7 @@
     margin-top: 13px;
     color: var(--text);
     font-family: var(--font-display);
-    font-size: 22px;
+    font-size: clamp(18px, 1.5vw, 22px);
     font-weight: 590;
     line-height: 1.2;
     letter-spacing: -0.04em;
