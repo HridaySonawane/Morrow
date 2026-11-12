@@ -164,12 +164,38 @@ export function SiteHeader() {
         return next;
       });
     };
+    const handleThemeShortcut = (event: KeyboardEvent) => {
+      if (
+        !event.shiftKey ||
+        event.ctrlKey ||
+        event.metaKey ||
+        event.altKey ||
+        event.repeat ||
+        event.key.toLowerCase() !== "t"
+      ) {
+        return;
+      }
+
+      const target = event.target;
+      const isEditing =
+        target instanceof HTMLElement &&
+        (target.isContentEditable ||
+          /^(INPUT|TEXTAREA|SELECT)$/.test(target.tagName));
+      const isCommandPaletteInput =
+        target instanceof Element && target.closest(".command-dialog");
+      if (isEditing && !isCommandPaletteInput) return;
+
+      event.preventDefault();
+      toggleFromPalette();
+    };
 
     window.addEventListener("morrow:open-signup", openSignup);
     window.addEventListener("morrow:toggle-theme", toggleFromPalette);
+    window.addEventListener("keydown", handleThemeShortcut);
     return () => {
       window.removeEventListener("morrow:open-signup", openSignup);
       window.removeEventListener("morrow:toggle-theme", toggleFromPalette);
+      window.removeEventListener("keydown", handleThemeShortcut);
     };
   }, []);
 

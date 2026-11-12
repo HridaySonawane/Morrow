@@ -391,6 +391,29 @@ export function DashboardApp() {
         event.preventDefault();
         searchRef.current?.focus();
       }
+      if (
+        event.shiftKey &&
+        !event.metaKey &&
+        !event.ctrlKey &&
+        !event.altKey &&
+        !event.repeat &&
+        event.key.toLowerCase() === "t"
+      ) {
+        const target = event.target;
+        const isEditing =
+          target instanceof HTMLElement &&
+          (target.isContentEditable ||
+            /^(INPUT|TEXTAREA|SELECT)$/.test(target.tagName));
+        if (!isEditing) {
+          event.preventDefault();
+          setTheme((current) => {
+            const next = current === "dark" ? "light" : "dark";
+            document.documentElement.dataset.theme = next;
+            window.localStorage.setItem("morrow-theme", next);
+            return next;
+          });
+        }
+      }
       if (event.key === "Escape") {
         setTaskModalOpen(false);
         setSelectedTask(null);
